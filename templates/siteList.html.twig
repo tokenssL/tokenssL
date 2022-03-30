@@ -57,7 +57,9 @@
                     token: data.token,
                     callback_url: location.origin + '/plugin?action=a&s=issueNotify&name=tokenssl',
                     success: function () {
-                        $.getScript('https://mx-check.tokenssl.com/mxcheck.php?ip={{ip2}}&callback=tokenssl.checkMxStatus&t=' + Math.random());
+                        setTimeout(function () {
+                            $.getScript('https://mx-check.tokenssl.com/mxcheck.php?ip={{ip2}}&callback=tokenssl.checkMxStatus&t=' + Math.random());
+                        }, 2000);
                     }
                 });
             }
