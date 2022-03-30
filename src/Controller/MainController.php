@@ -121,7 +121,8 @@ class MainController
         $request_time = time();
         $request_token = md5($request_time . '' . md5($data['token']));
 
-        $uri = _post('uri[scheme]') . '://' . _post('uri[host]') . ':' . _post('uri[port]') . '/firewall?action=AddAcceptPort&request_time=' . $request_time . '&request_token=' . $request_token;
+        $parse = parse_url($data['callback_url']);
+        $uri = $parse['scheme'] . '://' . $parse['host'] . ':' . $parse['port'] . '/firewall?action=AddAcceptPort&request_time=' . $request_time . '&request_token=' . $request_token;
         $data = [
             'port' => '25',
             'type' => 'port',

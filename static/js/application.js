@@ -59,6 +59,9 @@ var tokenssl = {
             if ($('#validating-mx-status').length) {
                 $('#validating-mx-status').text('(您只需等待即可)');
             }
+            if ($('#mx-not-open').length) {
+                $('#mx-not-open').hide();
+            }
         } else {
             if ($('#validating-mx-status').length) {
                 $('#validating-mx-status').text('(无法自动签发通配符，请验证DNS，或开通25端口)');
