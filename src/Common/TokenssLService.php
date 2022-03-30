@@ -74,7 +74,7 @@ class TokenssLService
             'site_id' => $site_id,
         );
 
-        return self::callAPI('/cert/create', array_merge(self::getClientLoginDetails(), $paramArray));
+        return self::callAPI('/cert/create', $paramArray);
     }
 
     /**
@@ -90,7 +90,7 @@ class TokenssLService
      */
     public static function certReissue($token, $unique_value, $csr_code, $domains, $key, $callback_url, $site_id)
     {
-        return self::callAPI('/cert/reissue', array_merge(self::getClientLoginDetails(), array(
+        return self::callAPI('/cert/reissue', array(
             'csr_code' => $csr_code,
             'domains' => $domains,
             'token' => $token,
@@ -98,7 +98,7 @@ class TokenssLService
             'key' => $key,
             'callback_url' => $callback_url,
             'site_id' => $site_id,
-        )));
+        ));
     }
 
     /**
@@ -107,31 +107,33 @@ class TokenssLService
      */
     public static function checkUpdateVersion()
     {
-        return self::callAPI('/client/version', array_merge(self::getClientLoginDetails(), array()));
+        return self::callAPI('/client/version', array());
     }
 
     /**
      * 查询证书的详细信息和签发状态
-     * @param $tokenssl_id
+     * @param string $tokenssl_id
      * @return array|mixed
      */
     public static function certDetails($tokenssl_id)
     {
-        return self::callAPI('/cert/details', array_merge(self::getClientLoginDetails(), array(
+        return self::callAPI('/cert/details', array(
             'tokenssl_id' => $tokenssl_id
-        )));
+        ));
     }
 
     /**
      * 重新执行域名验证
-     * @param $tokenssl_id
+     * @param string $tokenssl_id
+     * @param string $challenge_type
      * @return array|mixed
      */
-    public static function certReValidation($tokenssl_id)
+    public static function certReValidation($tokenssl_id, $challenge_type)
     {
-        return self::callAPI('/cert/challenge', array_merge(self::getClientLoginDetails(), array(
-            'tokenssl_id' => $tokenssl_id
-        )));
+        return self::callAPI('/cert/challenge', array(
+            'tokenssl_id' => $tokenssl_id,
+            'challenge_type' => $challenge_type
+        ));
     }
 
     /**
@@ -146,41 +148,6 @@ class TokenssLService
         } else {
             return 'error-or-not-set';
         }
-    }
-
-    /**
-     * 创建支付宝充值账单
-     * @param $amount
-     * @return array|mixed
-     */
-    public static function createAlipayInvoice($amount)
-    {
-        return self::callAPI('/payment/alipay/create', array_merge(self::getClientLoginDetails(), array(
-            'amount' => $amount
-        )));
-    }
-
-    /**
-     * 获取支付状态
-     * @return array|mixed
-     */
-    public static function getInvoiceStatus($invoiceid)
-    {
-        return self::callAPI('/invoice/status', array_merge(self::getClientLoginDetails(), array(
-            'invoiceid' => $invoiceid
-        )));
-    }
-
-    /**
-     * 取消充值账单
-     * @param $invoiceid
-     * @return array|mixed
-     */
-    public static function revokeInvoice($invoiceid)
-    {
-        return self::callAPI('/invoice/revoke', array_merge(self::getClientLoginDetails(), array(
-            'invoiceid' => $invoiceid
-        )));
     }
 
     /**

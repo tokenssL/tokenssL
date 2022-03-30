@@ -184,7 +184,7 @@ class MainController
                 return  ['status' => 'error', 'message' => "不存在对应的证书订单"];
             }
             // 执行远端的API订单验证检查
-            return TokenssLService::certReValidation($order->vendor_id);
+            return TokenssLService::certReValidation($order->vendor_id, _post('challenge_type'));
         } catch (\Exception $e) {
             return ['status' => "error", "message" => '操作失败：' . $e->getMessage()];
         }
@@ -292,48 +292,6 @@ class MainController
             'dcv_data' => $dcvFormat,
             'bt_ip' => $bt_ip,
         ]);
-    }
-
-    /**
-     * 查询账单支付状态
-     * @return array|mixed
-     */
-    public function getInvoiceStatus()
-    {
-        try {
-            $pl = TokenssLService::getInvoiceStatus(_post('invoiceid'));
-            return $pl;
-        } catch (TokenSSLException $exception) {
-            return ["status" => "error", "message" => "错误", $exception->getMessage()];
-        }
-    }
-
-    /**
-     * 取消充值账单
-     * @return array
-     */
-    public function revokeInvoice()
-    {
-        try {
-            $pl = TokenssLService::revokeInvoice(_post('invoiceid'));
-            return $pl;
-        } catch (TokenSSLException $exception) {
-            return ["status" => "error", "message" => "错误", $exception->getMessage()];
-        }
-    }
-
-    /**
-     * 创建充值订单
-     * @return array|mixed
-     */
-    public function generateAddFunds()
-    {
-        try {
-            $pl = TokenssLService::createAlipayInvoice(_post('amount'));
-            return $pl;
-        } catch (TokenSSLException $exception) {
-            return ["status" => "error", "message" => "错误", $exception->getMessage()];
-        }
     }
 
     /**
@@ -534,24 +492,6 @@ class MainController
     public function getClientLogs()
     {
         return $this->twig->render('clientLogs.html.twig');
-    }
-
-    /**
-     * @return string
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function addFunds()
-    {
-        return $this->twig->render('addFunds.html.twig', ['account' => [
-            'credit' => 100.01,
-        ]]);
-        $details = TokenssLService::getAccountDetails();
-        if ($details['result'] !== "success") {
-            return $details['message'];
-        }
-        return $this->twig->render('addFunds.html.twig', ['account' => $details]);
     }
 
     /**
