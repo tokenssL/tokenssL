@@ -1,0 +1,782 @@
+{
+    "packages": [
+        {
+            "name": "ltd-beget/apache-configurator",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LTD-Beget/apache-configurator.git",
+                "reference": "33d21c015320253b47fd322cab6e5d331ca1660c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LTD-Beget/apache-configurator/zipball/33d21c015320253b47fd322cab6e5d331ca1660c",
+                "reference": "33d21c015320253b47fd322cab6e5d331ca1660c",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "time": "2016-01-28T18:48:49+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "LTDBeget\\apacheConfigurator": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Viskov Sergey",
+                    "homepage": "https://github.com/voksiv"
+                }
+            ],
+            "description": "PHP library for parsing and editing apache configuration files.",
+            "keywords": [
+                "apache"
+            ],
+            "support": {
+                "issues": "https://github.com/LTD-Beget/apache-configurator/issues",
+                "source": "https://github.com/LTD-Beget/apache-configurator/tree/1.0.1"
+            },
+            "install-path": "../ltd-beget/apache-configurator"
+        },
+        {
+            "name": "nette/caching",
+            "version": "v2.5.x-dev",
+            "version_normalized": "2.5.9999999.9999999-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/caching.git",
+                "reference": "0026756b4a9f2ec2bd36907a1533f1f43a782e3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/caching/zipball/0026756b4a9f2ec2bd36907a1533f1f43a782e3a",
+                "reference": "0026756b4a9f2ec2bd36907a1533f1f43a782e3a",
+                "shasum": ""
+            },
+            "require": {
+                "nette/finder": "^2.2 || ~3.0.0",
+                "nette/utils": "^2.4 || ~3.0.0",
+                "php": ">=5.6 <8.1"
+            },
+            "conflict": {
+                "nette/nette": "<2.2"
+            },
+            "require-dev": {
+                "latte/latte": "^2.4",
+                "nette/di": "^2.4 || ~3.0.0",
+                "nette/tester": "^2.0",
+                "tracy/tracy": "^2.4"
+            },
+            "suggest": {
+                "ext-pdo_sqlite": "to use SQLiteStorage or SQLiteJournal"
+            },
+            "time": "2020-11-06T00:37:53+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "⏱ Nette Caching: library with easy-to-use API and many cache backends.",
+            "homepage": "https://nette.org",
+            "keywords": [
+                "cache",
+                "journal",
+                "memcached",
+                "nette",
+                "sqlite"
+            ],
+            "support": {
+                "issues": "https://github.com/nette/caching/issues",
+                "source": "https://github.com/nette/caching/tree/v2.5"
+            },
+            "install-path": "../nette/caching"
+        },
+        {
+            "name": "nette/database",
+            "version": "v2.4.x-dev",
+            "version_normalized": "2.4.9999999.9999999-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/database.git",
+                "reference": "feb721935d632b8f4024323cf4f48531c2ce6fd4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/database/zipball/feb721935d632b8f4024323cf4f48531c2ce6fd4",
+                "reference": "feb721935d632b8f4024323cf4f48531c2ce6fd4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "nette/caching": "^2.2",
+                "nette/utils": "^2.4",
+                "php": ">=5.6 <8.1"
+            },
+            "conflict": {
+                "nette/nette": "<2.2"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0.0",
+                "nette/di": "^2.4 || ~3.0.0",
+                "nette/tester": "^2.0",
+                "tracy/tracy": "^2.4"
+            },
+            "time": "2021-11-08T15:24:40+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "💾 Nette Database: layer with a familiar PDO-like API but much more powerful. Building queries, advanced joins, drivers for MySQL, PostgreSQL, SQLite, MS SQL Server and Oracle.",
+            "homepage": "https://nette.org",
+            "keywords": [
+                "database",
+                "mssql",
+                "mysql",
+                "nette",
+                "notorm",
+                "oracle",
+                "pdo",
+                "postgresql",
+                "queries",
+                "sqlite"
+            ],
+            "support": {
+                "issues": "https://github.com/nette/database/issues",
+                "source": "https://github.com/nette/database/tree/v2.4"
+            },
+            "install-path": "../nette/database"
+        },
+        {
+            "name": "nette/finder",
+            "version": "v2.4.x-dev",
+            "version_normalized": "2.4.9999999.9999999-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/finder.git",
+                "reference": "0bdd6ad45a3482971207b9ca469ccee36d2ccd84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/finder/zipball/0bdd6ad45a3482971207b9ca469ccee36d2ccd84",
+                "reference": "0bdd6ad45a3482971207b9ca469ccee36d2ccd84",
+                "shasum": ""
+            },
+            "require": {
+                "nette/utils": "~2.4",
+                "php": ">=5.6.0"
+            },
+            "conflict": {
+                "nette/nette": "<2.2"
+            },
+            "require-dev": {
+                "nette/tester": "~2.0",
+                "tracy/tracy": "^2.3"
+            },
+            "time": "2018-10-17T15:46:12+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "? Nette Finder: find files and directories with an intuitive API.",
+            "homepage": "https://nette.org",
+            "keywords": [
+                "filesystem",
+                "glob",
+                "iterator",
+                "nette"
+            ],
+            "support": {
+                "issues": "https://github.com/nette/finder/issues",
+                "source": "https://github.com/nette/finder/tree/v2.4"
+            },
+            "install-path": "../nette/finder"
+        },
+        {
+            "name": "nette/utils",
+            "version": "v2.5.x-dev",
+            "version_normalized": "2.5.9999999.9999999-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/utils.git",
+                "reference": "7345f81181346ff6244891bdb1ba99f9e36b5e37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/utils/zipball/7345f81181346ff6244891bdb1ba99f9e36b5e37",
+                "reference": "7345f81181346ff6244891bdb1ba99f9e36b5e37",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "conflict": {
+                "nette/nette": "<2.2"
+            },
+            "require-dev": {
+                "nette/tester": "~2.0",
+                "tracy/tracy": "^2.3"
+            },
+            "suggest": {
+                "ext-gd": "to use Image",
+                "ext-iconv": "to use Strings::webalize() and toAscii()",
+                "ext-intl": "for script transliteration in Strings::webalize() and toAscii()",
+                "ext-json": "to use Nette\\Utils\\Json",
+                "ext-mbstring": "to use Strings::lower() etc...",
+                "ext-xml": "to use Strings::length() etc. when mbstring is not available"
+            },
+            "time": "2021-01-25T20:38:48+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "files": [
+                    "src/loader.php"
+                ],
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "🛠 Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
+            "homepage": "https://nette.org",
+            "keywords": [
+                "array",
+                "core",
+                "datetime",
+                "images",
+                "json",
+                "nette",
+                "paginator",
+                "password",
+                "slugify",
+                "string",
+                "unicode",
+                "utf-8",
+                "utility",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/nette/utils/issues",
+                "source": "https://github.com/nette/utils/tree/v2.5"
+            },
+            "install-path": "../nette/utils"
+        },
+        {
+            "name": "romanpitak/nginx-config-processor",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/romanpitak/Nginx-Config-Processor.git",
+                "reference": "0dfcbbda696c7baeed8f955e4831696d90e56758"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/romanpitak/Nginx-Config-Processor/zipball/0dfcbbda696c7baeed8f955e4831696d90e56758",
+                "reference": "0dfcbbda696c7baeed8f955e4831696d90e56758",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "codacy/coverage": "dev-master",
+                "codeclimate/php-test-reporter": "dev-master"
+            },
+            "time": "2016-01-31T19:44:23+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "RomanPitak\\Nginx\\Config\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Piták",
+                    "email": "roman@pitak.net",
+                    "homepage": "http://pitak.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Nginx configuration files processor.",
+            "homepage": "https://github.com/romanpitak/Nginx-Config-Processor",
+            "keywords": [
+                "conf",
+                "conf file",
+                "config",
+                "config file",
+                "configuration",
+                "configuration file",
+                "create",
+                "creator",
+                "manager",
+                "nginx",
+                "parser",
+                "php",
+                "processor"
+            ],
+            "support": {
+                "email": "roman@pitak.net",
+                "issues": "https://github.com/romanpitak/Nginx-Config-Processor/issues",
+                "source": "https://github.com/romanpitak/Nginx-Config-Processor"
+            },
+            "install-path": "../romanpitak/nginx-config-processor"
+        },
+        {
+            "name": "symfony/polyfill-ctype",
+            "version": "v1.19.0",
+            "version_normalized": "1.19.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-ctype.git",
+                "reference": "aed596913b70fae57be53d86faa2e9ef85a2297b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/aed596913b70fae57be53d86faa2e9ef85a2297b",
+                "reference": "aed596913b70fae57be53d86faa2e9ef85a2297b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-ctype": "For best performance"
+            },
+            "time": "2020-10-23T09:01:57+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.19-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gert de Pagter",
+                    "email": "BackEndTea@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for ctype functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "ctype",
+                "polyfill",
+                "portable"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.19.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../symfony/polyfill-ctype"
+        },
+        {
+            "name": "token/blob-common",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenssl/blob-common.git",
+                "reference": "0307490c9c4bf0b43289fb9c73a8018cc8f09035"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenssl/blob-common/zipball/0307490c9c4bf0b43289fb9c73a8018cc8f09035",
+                "reference": "0307490c9c4bf0b43289fb9c73a8018cc8f09035",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-dom": "*",
+                "ext-filter": "*",
+                "ext-hash": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "token/blob-domain": "*",
+                "token/blob-mimes": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.7.*"
+            },
+            "suggest": {
+                "blobfolio/blob-phone": "*"
+            },
+            "time": "2022-03-30T10:07:22+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "blobfolio\\common\\": "lib/blobfolio/common"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Stoik",
+                    "email": "josh@blobfolio.com",
+                    "homepage": "https://blobfolio.com"
+                }
+            ],
+            "description": "An expansive PHP toolkit with functions for sanitizing, formatting, parsing, etc.",
+            "homepage": "https://github.com/tokenssl/blob-common",
+            "keywords": [
+                "data",
+                "formatting",
+                "parsing",
+                "php",
+                "sanitizing"
+            ],
+            "support": {
+                "source": "https://github.com/tokenssl/blob-common/tree/main"
+            },
+            "install-path": "../token/blob-common"
+        },
+        {
+            "name": "token/blob-domain",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenssl/blob-domain.git",
+                "reference": "1f895a42689295d72e857865db2e2d1184fc03d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenssl/blob-domain/zipball/1f895a42689295d72e857865db2e2d1184fc03d6",
+                "reference": "1f895a42689295d72e857865db2e2d1184fc03d6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-filter": "*",
+                "ext-intl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "token/blob-common": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.7.*"
+            },
+            "time": "2022-03-30T10:09:50+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "blobfolio\\domain\\": "lib/blobfolio/domain"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Stoik",
+                    "email": "josh@blobfolio.com",
+                    "homepage": "https://blobfolio.com"
+                }
+            ],
+            "description": "Parse and validate domain names.",
+            "homepage": "https://github.com/Blobfolio/blob-domain",
+            "keywords": [
+                "Public Suffix List",
+                "domain",
+                "formatting",
+                "iana",
+                "icann",
+                "idn",
+                "php",
+                "tld"
+            ],
+            "support": {
+                "source": "https://github.com/tokenssl/blob-domain/tree/main"
+            },
+            "install-path": "../token/blob-domain"
+        },
+        {
+            "name": "token/blob-mimes",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenssl/blob-mimes.git",
+                "reference": "cb9cfbf48227f0450b5d46f0e1fbff1464a2f832"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenssl/blob-mimes/zipball/cb9cfbf48227f0450b5d46f0e1fbff1464a2f832",
+                "reference": "cb9cfbf48227f0450b5d46f0e1fbff1464a2f832",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-dom": "*",
+                "ext-filter": "*",
+                "ext-hash": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "token/blob-common": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.7.*"
+            },
+            "time": "2022-03-30T10:12:05+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "blobfolio\\mimes\\": "lib/blobfolio/mimes"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Stoik",
+                    "email": "josh@blobfolio.com",
+                    "homepage": "https://blobfolio.com"
+                }
+            ],
+            "description": "A comprehensive MIME and file extension tool for PHP.",
+            "homepage": "https://github.com/Blobfolio/blob-mimes",
+            "keywords": [
+                "extensions",
+                "files",
+                "mimes",
+                "suffix"
+            ],
+            "support": {
+                "source": "https://github.com/tokenssl/blob-mimes/tree/main"
+            },
+            "install-path": "../token/blob-mimes"
+        },
+        {
+            "name": "twig/twig",
+            "version": "v1.42.5",
+            "version_normalized": "1.42.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/Twig.git",
+                "reference": "87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e",
+                "reference": "87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0",
+                "symfony/polyfill-ctype": "^1.8"
+            },
+            "require-dev": {
+                "psr/container": "^1.0",
+                "symfony/phpunit-bridge": "^4.4|^5.0"
+            },
+            "time": "2020-02-11T05:59:23+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.42-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                },
+                "psr-4": {
+                    "Twig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Twig Team",
+                    "role": "Contributors"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "https://twig.symfony.com",
+            "keywords": [
+                "templating"
+            ],
+            "support": {
+                "issues": "https://github.com/twigphp/Twig/issues",
+                "source": "https://github.com/twigphp/Twig/tree/1.x"
+            },
+            "install-path": "../twig/twig"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

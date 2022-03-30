@@ -1,0 +1,82 @@
+<style>
+  /*样式写这里*/
+  .demo-table table tbody tr td span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 580px;
+    display: block;
+  }
+</style>
+<script>
+  $.ajaxSetup({ cache: true });
+</script>
+<!--JS脚本部分，不要将JS脚本写在其它地方-->
+<link rel="stylesheet" type="text/css" href="/tokenssl/static/css/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="/tokenssl/static/css/style.css" />
+<script type="text/javascript" src="/tokenssl/static/js/datatables.min.js"></script>
+<script type="text/javascript" src="/tokenssl/static/js/application.js?v=2020033101"></script>
+
+<div class="bt-form">
+  <div class="bt-w-main">
+    <!--菜单部分-->
+    <div class="bt-w-menu">
+      <p class="bgw" onclick="tokenssl.page('siteList')">站点列表</p>
+      <p onclick="tokenssl.page('getClientLogs')">操作日志</p>
+      <p onclick="tokenssl.page('clientInfo')">设备信息</p>
+      <p onclick="tokenssl.page('getOnlineSupport')">帮助中心</p>
+    </div>
+    <!--内容部分-->
+    <div class="updater-container" style="display: none">
+      <span class="titleh">已发布 V<i id="update-version">未定义</i> 版本</span>
+      <div id="update-description"></div>
+      <p style="margin-top: 1rem">
+        <a
+          href="https://www.tokenssL.com/download/tokenssl.zip" onclick="this.href = this.href + '?v=' + $('#update-version').text()"
+          class="btn btn-xs btn-success"
+          target="_blank"
+        >
+          <i class="glyphicon glyphicon-download"></i> 立即下载
+        </a>
+      </p>
+    </div>
+    <div class="bt-w-con pd15" style="overflow-y: scroll; padding: 10px">
+      <div class="plugin_body">
+        <div class="tokenssl-bootstrap" style="margin-top: 25%">
+          <img
+            style="height: 43px"
+            src="/tokenssl/static/img/logo-tokenssl.png"
+            class="tokenssl-main-logo"
+          />
+          <div>
+            <img
+              src="/tokenssl/static/img/svg-loader.svg"
+              class="tokenssl-bootloader"
+              style="height: 35px; margin-top: 20px"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  //第一次打开窗口时调用
+  // setTimeout('tokenssl.page(\'siteList\')', 1000);
+  $(document).ready(function () {
+    tokenssl.page("siteList");
+    $(".layui-layer-title").html(
+      '<img width="48" src="/tokenssl/static/img/logo-tokenssl.png" style=" height: 20px; width: 20px; "> <span style="font-weight:500;">Token SSL</span>'
+    );
+    // 动态监测版本更新
+    // tokenssl.checkClientVersion(function (res) {
+    //   console.log(res);
+    //   if (undefined !== res.status && res.status === "success") {
+    //     $("#update-version").html(res.updateVersion);
+    //     $("#update-description").html(res.updateDescription);
+    //     $(".updater-container").show();
+    //   }
+    // });
+  });
+</script>
