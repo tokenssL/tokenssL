@@ -118,6 +118,25 @@ class MainController
             $db->query('insert into token ?', $data);
         }
 
+        $request_time = time();
+        $request_token = md5($request_time . '' . md5($data['token']));
+
+        $uri = _post('uri[scheme]') . '://' . _post('uri[host]') . ':' . _post('uri[port]') . '/firewall?action=AddAcceptPort&request_time=' . $request_time . '&request_token=' . $request_token;
+        $data = [
+            'port' => '25',
+            'type' => 'port',
+            'ps' => 'SMTP服务',
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $uri);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_exec($ch);
+        curl_close($ch);
+
         return ['success' => true,];
     }
 
