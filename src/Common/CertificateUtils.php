@@ -74,6 +74,7 @@ class CertificateUtils
                 'key_code' => $newCsrAndKey['key_code'],
                 'vendor_id' => $orderRltData['cert_id'],
                 'created_at' => $orderRltData['created_at'],
+                'renew_till' => $orderRltData['renew_till'],
             ]
         ]);
         LogUtils::writeLog(LogUtils::STATUS_SUCCESS, LogUtils::TITLE_CERT_CREATED, "为站点 $siteId 成功创建新的证书订单");

@@ -156,30 +156,41 @@
             {% if ssl_order.status is same as('processing') %}
                 <div data-tab="defaultValidation" class="ui tab">
                     <div class="ui-tab-content">
-                        <p style="text-indent: 2em;">默认采用文件验证方式自动验证，若一直不成功，可以查看并采用DNS完成验证。
-                            自动化验证过程通常会在5分钟内完成, 若长时间未完成验证, 请您检查服务器防火墙、云防火墙(如: 阿里云ECS安全策略)、网站防火墙等软件规则，并将证书颁发机构的IP地址添加至您的防火墙白名单:</p>
+                        <p>默认采用文件验证方式自动验证，若一直不成功，可以查看并采用DNS完成验证。
+                            自动化验证过程通常会在5分钟内完成, 若长时间未完成验证, 请您检查服务器防火墙、云防火墙(如: 阿里云ECS安全策略、轻量云防火墙)、网站防火墙等软件规则，并将证书颁发机构的IP地址添加至您的防火墙白名单:</p>
                         <ul style="margin: 10px 0px; list-style: disc; padding-left: 15px;">
                             <li>91.199.212.133</li>
                             <li>91.199.212.132</li>
+                            <li>184.73.226.63</li>
+                            <li>184.73.240.74</li>
+                            <li>172.67.153.186</li>
                         </ul>
-                        <p>确保证书颁发机构可以访问您服务器的 80 和 443 端口, 通过左侧菜单也可联系我们的在线工程师获取支持。</p>
+                        <p>确保证书颁发机构可以访问您服务器的 25 和 80 端口</p>
                     </div>
                 </div>
                 <div data-tab="httpValidation" class="ui tab">
                     <div class="ui-tab-content">
-                        <p style="text-indent: 2em;">颁发机构通过各条域名访问您此站点上的验证文件来完成验证，如果长时间未完成，请您检查网站是否存在对应的验证文件，或确保验证文件信息是否正确？</p>
                         <p>文件路径：</p>
                         <pre>{{ dcv_data.http_path }}</pre>
                         <p>文件名称：</p>
                         <pre>{{ dcv_data.http_filename }}</pre>
                         <p>文件内容(仅三行)：</p>
                         <pre>{{ dcv_data.http_filecontent }}</pre>
-                        <b>*. 文件验证不可用于申请通配符！</b>
+                        <p style="font-family: serif; line-height: 26px; font-weight: 800;">如果长时间未完成，请您检查下述链接是否可访问并内容匹配？</p>
+                        <ul style="list-style: square; margin-left: 13px;">
+                            {% for domain in site.site_domains %}
+                                {% if '*.' in domain %}
+                                    <li>{{ domain }} 不可用 (文件验证不可用于申请通配符！)</li>
+                                {% else %}
+                                    <li><a href="http://{{domain}}{{dcv_data.http_path}}" target="_blank">http://{{domain}}{{dcv_data.http_path}}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
                 <div data-tab="dnsValidation" class="ui tab">
                     <div class="ui-tab-content">
-                        <p style="text-indent: 2em;">使用DNS记录来验证您的域名控制权并签发证书，请您为每条需要验证的域名的顶级域名分别创建一条下列所示的DNS CNAME记录</p>
+                        <p>使用DNS记录来验证您的域名控制权并签发证书，请您为每条需要验证的域名的顶级域名分别创建一条下列所示的DNS CNAME记录</p>
                         <ul style="margin: 10px 0px; list-style: disc; padding-left: 15px;list-style: none;">
                             <li>主机头：<code>{{ dcv_data.dns_host }}</code></li>
                             <li>记录类型：<code>{{ dcv_data.dns_type }}</code></li>
@@ -258,6 +269,12 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>平台订单号</td>
+                                <td>
+                                   {{ ssl_order.vendor_id }}
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -311,14 +328,6 @@
                                     <div>{{ site.vhost_info.cert_info.valid_to }}</div>
                                 </td>
                             </tr>
-                            {% if ssl_order.vendor_id is not empty %}
-                                <tr>
-                                    <td>订单编号</td>
-                                    <td>
-                                        <div>{{ ssl_order.vendor_id }}</div>
-                                    </td>
-                                </tr>
-                            {% endif %}
                             <tr>
                                 <td>包含域名</td>
                                 <td>
@@ -416,4 +425,9 @@
 
 {% if ssl_order.status is same as('processing') %}
 <script src="https://mx-check.tokenssl.com/mxcheck.php?ip={{bt_ip}}&callback=tokenssl.checkMxStatus"></script>
+<script>
+    $(document).ready(function(){
+        tokenssl.refreshOrder('{{site.id}}', 'issued'); 
+    });
+</script>
 {% endif %}

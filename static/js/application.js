@@ -54,7 +54,6 @@ var tokenssl = {
         });
     },
     checkMxStatus: function (data) {
-        console.log(data);
         if (data.success) {
             if ($('#validating-mx-status').length) {
                 $('#validating-mx-status').text('(您只需等待即可)');
@@ -95,6 +94,19 @@ var tokenssl = {
                 layer.msg(response.message, { icon: 1 });
                 tokenssl.page('siteSetting', { siteId: siteId });
             }
+        });
+    },
+    refreshOrder: function (siteId, status) {
+        request_plugin('tokenssl', 'refreshOrder', { siteId: siteId }, function (response) {
+            if (response.status == "success") {
+                if (response.cert.status == status) {
+                    tokenssl.page('siteSetting', { siteId: siteId });
+                    return;
+                }
+            }
+            setTimeout(function () {
+                tokenssl.refreshOrder(siteId, status); 
+            }, 3000);
         });
     },
     setSSL: function (siteName, certCode, keycode) {

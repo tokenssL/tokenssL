@@ -64,7 +64,9 @@ class DatabaseUtils
 	key_code text,
 	valid_from timestamp,
 	valid_till timestamp,
+    renew_till timestamp,
 	vendor_id text,
+    deploy_status integer default 0 not null,
 	created_at timestamp default current_timestamp not null
 );
 

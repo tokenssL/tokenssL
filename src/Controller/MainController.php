@@ -286,12 +286,37 @@ class MainController
             $dcvFormat['http_filecontent'] = $info['http_filecontent'];
             break;
         }
+
         return $this->twig->render('siteSetting.html.twig', [
             'site' => $site,
             'ssl_order' => $order,
             'dcv_data' => $dcvFormat,
             'bt_ip' => $bt_ip,
         ]);
+    }
+
+    /**
+     * 签发中，刷新状态
+     */
+    public function refreshOrder()
+    {
+        $site_id = _post('siteId');
+        if (!$site_id) {
+            return [
+                'status' => 'error',
+                'message' => '站点ID不能为空',
+            ];
+        }
+
+        $db = DatabaseUtils::initLocalDatabase();
+        $db = $db->query("select status from certificate where site_id = ?", $site_id)->fetch();
+        return [
+            'status' => 'success',
+            'message' => '操作成功',
+            'cert' => [
+                'status' => $db['status'],
+            ]
+        ];
     }
 
     /**

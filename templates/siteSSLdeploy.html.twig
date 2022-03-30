@@ -40,12 +40,3 @@
         <button onclick="javascript:tokenssl.page('siteSetting',{siteId:'{{ site.id }}'});" class="btn btn-default btn-sm btn-nobg" title="返回站点详情" style="color: #8c8b8b !important;"> 放弃</button>
     </span>
 </div>
-
-<script>
-    // 初始化购物车价格
-    tokenssl.localCartTotal($('label[data-default-selected]'));
-    // 更好的购物车产品点击捕获
-    $('div.to-cart.ssl-product').click(function(){
-        $(this).children()[0].click();
-    })
-</script>
