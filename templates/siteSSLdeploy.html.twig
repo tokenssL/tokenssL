@@ -9,7 +9,7 @@
     <div class="to_tvalue" style="height: auto;">
         <div>申请信息:</div>
         {% if site.site_domains is not empty %}
-            <div readonly disabled class="bt-input-text text-right" style="padding: 5px 10px;margin: 0px; width: 100%; height: {{ height }}px; line-height: 18px;" onclick="return false;">
+            <div readonly disabled class="bt-input-text text-right" style="padding: 5px 10px;margin: 0px; width: 100%; height: auto; line-height: 18px;" onclick="return false;">
                 {% for domain in site.site_domains %}
                     {{ domain }}<br />
                 {% endfor %}

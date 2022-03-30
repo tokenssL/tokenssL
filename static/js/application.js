@@ -109,6 +109,31 @@ var tokenssl = {
             }, 3000);
         });
     },
+    setBaotaSSL: function (certPem, privateKey) {
+        var loads = bt.load('启用中，请稍等...');
+        request_baotaAjax('config', 'SavePanelSSL', { privateKey: privateKey, certPem: certPem }, function (response) {
+            if (response.status !== true) {
+                layer.msg(response.msg, { icon: 2 });
+            } else {
+                request_baotaAjax('config', 'SetPanelSSL', { cert_type: 1 }, function (response) {
+                    if (response.status !== true) {
+                        layer.msg(response.msg, { icon: 2 });
+                    } else {
+                        request_baotaAjax('system', 'ReWeb', { }, function (response) {
+                            if (response.status !== true) {
+                                layer.msg(response.msg, { icon: 2 });
+                            } else {
+                                layer.msg('已成功为宝塔启用面板SSL证书，刷新中', { icon: 1 });
+                                setTimeout(function () {
+                                    location.href = location.href.replace(/^http:\/\//, 'https://');
+                                }, 3000);
+                            }
+                        }, 10000, 'GET');
+                    }
+                });
+            }
+        });
+    },
     setSSL: function (siteName, certCode, keycode) {
         var loads = bt.load('正在尝试安装...');
         request_baotaAjax('site', 'SetSSL', { type: 1, siteName: siteName, key: keycode, csr: certCode }, function (response) {
@@ -239,10 +264,13 @@ function request_plugin(plugin_name, function_name, args, callback, timeout) {
  * @param callback
  * @param timeout
  */
-function request_baotaAjax(layer, action, args, callback, timeout) {
+function request_baotaAjax(layer, action, args, callback, timeout, type) {
     if (!timeout) timeout = 10000;
+    if (!type || 'undefined' === typeof type) {
+        type = 'POST';
+    }
     $.ajax({
-        type: 'POST',
+        type: type,
         url: '/' + layer + '?action=' + action,
         data: args,
         timeout: timeout,

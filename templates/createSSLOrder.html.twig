@@ -7,8 +7,11 @@
     <div class="to_tvalue" style="height: auto;">
         <div>网站域名:</div>
         {% if site.site_domains is not empty %}
-            <textarea readonly disabled class="bt-input-text" style="padding: 5px 10px;margin: 0px; width: 100%; height: 116px; line-height: 18px; border: 1px solid rgb(221, 221, 221);" onclick="return false;">{% for domain in site.site_domains %}{{ domain }}
-{% endfor %}</textarea>
+            <div readonly disabled class="bt-input-text" style="padding: 5px 10px;margin: 0px; width: 100%; height: auto; line-height: 18px;" onclick="return false;">
+                {% for domain in site.site_domains %}
+                    {{ domain }}<br />
+                {% endfor %}
+            </div>
         {% else %}
             暂无域名
         {% endif %}

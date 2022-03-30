@@ -67,6 +67,19 @@
 {# 其他信息和业务操作 #}
 <div class="row tokenssl-row">
     {#一些通知信息和交互操作#}
+    {% if ssl_order.status is same as('issued') and has_ip is same as(true) %}
+        <script>
+            tokenssl.gVars.siteSetting.key = `{{ ssl_order.key_code }}`;
+            tokenssl.gVars.siteSetting.cert = `{{ ssl_order.cert_code }}`;
+        </script>
+        <div class="col-md-12" style="background: #fff; padding-right: 0px;">
+            <div class="to-warn-div">
+                <span class="w-title">提示</span>：此证书可以用于保护您的宝塔面板，是否一键开启宝塔SSL？（目前不支持续期后自动安装到面板）
+                <div style="margin-top: 10px;">
+                <button class="btn btn-sm btn-success" onclick="tokenssl.setBaotaSSL(tokenssl.gVars.siteSetting.cert, tokenssl.gVars.siteSetting.key)">给宝塔面板启用HTTPS</button></div>
+            </div>
+        </div>
+    {% endif %}
     {% if site.vhost_info.ssl_enabled is same as(false) and ssl_order is not empty and ssl_order.status is same as('issued') %}
         <script>
             tokenssl.gVars.siteSetting.key = `{{ ssl_order.key_code }}`;
@@ -76,7 +89,8 @@
         <div class="col-md-12" style="background: #fff; padding-right: 0px;">
             <div class="to-warn-div">
                 <span class="w-title">提示</span>：我们为当前站点找到了一个还未部署的SSL证书订单, 您可以尝试点击下列按钮来部署证书到本站点。
-                <div style="margin-top: 10px;"><button class="btn btn-sm btn-success" onclick="tokenssl.setSSL('{{ site.name }}', tokenssl.gVars.siteSetting.cert, tokenssl.gVars.siteSetting.key)">立即安装证书</button></div>
+                <div style="margin-top: 10px;">
+                <button class="btn btn-sm btn-success" onclick="tokenssl.setSSL('{{ site.name }}', tokenssl.gVars.siteSetting.cert, tokenssl.gVars.siteSetting.key)">立即安装证书</button></div>
             </div>
         </div>
     {% endif %}
@@ -102,7 +116,7 @@
         <!-- Nav tabs -->
         <div class="ui top attached tabular menu tokenssl-tab">
             {% if ssl_order is not empty %}
-                <a class="item {% if site.insecure_domains is empty or ssl_order.status is same as('processing')%}active{% endif %}" data-tab="orderDetails" aria-controls="profile" role="tab" data-toggle="tab">
+                <a class="item {% if site.insecure_domains is empty or ssl_order.status is same as('processing')%} active {% endif %}" data-tab="orderDetails" aria-controls="profile" role="tab" data-toggle="tab">
                     <i class="glyphicon glyphicon-shopping-cart"></i> 订单信息
                 </a>
             {% endif %}
@@ -128,10 +142,10 @@
                 </a>
             {% endif %}
             {% if site.vhost_info.ssl_enabled is same as(true) %}
-                <a class="item {% if ssl_order is empty and (site.insecure_domains is empty or site.vhost_info.cert_info is not empty) %}active{% endif %}" data-tab="certDetails" aria-controls="profile" role="tab" data-toggle="tab">
+                <a class="item {% if ssl_order is empty and (site.insecure_domains is empty or site.vhost_info.cert_info is not empty) %} active {% endif %}" data-tab="certDetails" aria-controls="profile" role="tab" data-toggle="tab">
                     <i class="glyphicon glyphicon-equalizer"></i> 证书信息
                 </a>
-                <a class="item{% if ssl_order.status is same as('issued') and site.insecure_domains is not empty %} active{% endif %}" data-tab="secureDetails" aria-controls="messages" role="tab" data-toggle="tab">
+                <a class="item {% if ssl_order.status is same as('issued') and site.insecure_domains is not empty %} active{% endif %}" data-tab="secureDetails" aria-controls="messages" role="tab" data-toggle="tab">
                     <i class="glyphicon glyphicon-globe"></i> 域名加密状态
                 </a>
                 {% if ssl_order.status is same as('issued') %}
@@ -218,7 +232,7 @@
             </div>
             {% endif %}
             {% if ssl_order is not empty %}
-                <div class="ui tab {% if site.insecure_domains is empty or ssl_order.status is same as('processing')%}active{% endif %}" data-tab="orderDetails">
+                <div class="ui tab {% if site.insecure_domains is empty or ssl_order.status is same as('processing')%} active {% endif %}" data-tab="orderDetails">
                     <div class="col-md-12" style="padding: 0px;">
                         <table class="table tokenssl-table divtable  dataTable no-footer tokenssl-infotable">
                             <tbody>
@@ -281,7 +295,7 @@
                 </div>
             {% endif %}
             {% if site.vhost_info.ssl_enabled is same as(true) %}
-                <div class="ui tab {% if ssl_order is empty and (site.insecure_domains is empty or site.vhost_info.cert_info is not empty) %}active{% endif %}" data-tab="certDetails">
+                <div class="ui tab {% if ssl_order is empty and (site.insecure_domains is empty or site.vhost_info.cert_info is not empty) %} active {% endif %}" data-tab="certDetails">
                     {#  证书有效期和基本信息  #}
                     <div class="col-md-12" style="padding: 0px;">
                         <table class="table tokenssl-table divtable  dataTable no-footer tokenssl-infotable">
@@ -342,7 +356,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="ui tab {% if ssl_order.status is same as('issued') and site.insecure_domains is not empty %}active{% endif %}" data-tab="secureDetails">
+                <div class="ui tab {% if ssl_order.status is same as('issued') and site.insecure_domains is not empty %} active {% endif %}" data-tab="secureDetails">
                     {# 域名信息 #}
                     <div class="col-md-12" style="padding: 0px;">
                         <table class="table tokenssl-table divtable  dataTable no-footer tokenssl-infotable">

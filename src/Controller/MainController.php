@@ -82,7 +82,7 @@ class MainController
         $data = [
             'initializeRequired' => !DatabaseUtils::getToken(),
             'ip' => '',
-            'ip2' => trim(file_get_contents('https://api.ip.sb/ip')),
+            'ip2' => $this->getIp(),
         ];
         if ($data['initializeRequired']) {
             $data['ip'] = trim(gethostbyname('smtp.forwarding.tokenssl.com'));
@@ -266,12 +266,19 @@ class MainController
         // 获取 TokenSSL 证书订单
         $db = DatabaseUtils::initLocalDatabase();
         $order = $db->query("select * from certificate where site_id = ?", ($site['id']))->fetch();
+        $has_ip = false;
         if (isset($order->domains)) {
             $order->domains = json_decode($order->domains);
+            foreach ($order->domains as $domain) {
+                if (filter_var($domain, FILTER_VALIDATE_IP)) {
+                    $has_ip = true;
+                    break;
+                }
+            }
         }
 
         if ($order['status'] == 'processing') {
-            $bt_ip = trim(file_get_contents('https://api.ip.sb/ip'));
+            $bt_ip = $this->getIp();
         }
         //检出域名验证信息
         $dcvFormat = [];
@@ -292,7 +299,26 @@ class MainController
             'ssl_order' => $order,
             'dcv_data' => $dcvFormat,
             'bt_ip' => $bt_ip,
+            'has_ip' => $has_ip,
         ]);
+    }
+
+    protected function getIp()
+    {
+        $db = DatabaseUtils::initLocalDatabase();
+        $row = $db->query('select value from configuration where setting=?', 'ip') ->fetch();
+        $ip = null;
+        if ($row) {
+            $ip = $row['value'];
+        }
+        if (!$ip) {
+            $ip = trim(file_get_contents('https://api.ip.sb/ip'));
+            $db->query('update configuration set', [
+                'value' => $ip,
+            ], 'WHERE setting=?', 'ip');
+        }
+
+        return $ip;
     }
 
     /**
@@ -403,7 +429,6 @@ class MainController
         }
 
         return $this->twig->render('siteSSLdeploy.html.twig', [
-            'height' => (count($site['site_domains']) + 2) * 18 + 12,
             'site' => $site,
             'token' => _post('token'),
             'period' => _post('period'),
