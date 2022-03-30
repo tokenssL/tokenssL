@@ -1,0 +1,16 @@
+<div class="page-desc">
+    <div class="tokenssl-page-title">升级您的PHP环境</div>
+    运行TokenSSL客户端时可能遇到了一些问题, 请您参考下列提示来解决并重新运行TokenSSL客户端。
+</div>
+{# 服务器基本信息 #}
+<div>
+    {% for error in errors %}
+    <div class="line">
+        <span class="to_tvalue" style="height: auto;">
+            <p style="color: red; font-weight: 600;font-size: 15px;">{{ error.title }}</p>
+            {{ error.desc }}
+        </span>
+    </div>
+    {% endfor %}
+</div>
+<p style="color: red;">注意: 部分PHP扩展安装后, 可能需请您卸载并重新安装TokenSSL插件后才可正常运行。</p>

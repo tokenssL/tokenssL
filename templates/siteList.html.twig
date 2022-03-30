@@ -1,0 +1,160 @@
+<div id="mx-not-open" style="background: #fff; padding-right: 0px; display: none;">
+    <div class="to-warn-div">
+        <span class="w-title">特别注意</span>：您服务器没有开通25端口，将会影响通配符证书的签发，建议您联系IDC开通25端口以获得最佳体验（仅需入网即可）。
+    </div>
+</div>
+<table id="sites" class="table table-hover tokenssl-table divtable " style="width:100%">
+    <thead>
+    <tr>
+        <th>站点名称</th>
+        <th style="min-width: 90px;">HTTPS</th>
+        <th style="min-width: 70px;">级别</th>
+        <th class="text-right" style="min-width: 80px">失效日期</th>
+        <th class="text-right" style="min-width: 40px;">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td colspan="7" style="text-align: center;">
+            <img src="/tokenssl/static/img/ajax-loader.gif" style="height: 15px;"> 数据加载中...
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+{% if initializeRequired is same as(true) %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.post('/system?action=ServiceAdmin', { name: 'nginx', type: 'reload' });
+        $.ajax({
+            type: 'post',
+            url: '/config?action=get_token', 
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                var ip = '{{ ip }}';
+                var ip2 = '{{ ip2 }}';
+                var has_change = false;
+                if (!data.limit_addr || 'string' != typeof data.limit_addr) {
+                    data.limit_addr = '';
+                }
+                if (data.limit_addr.indexOf(ip) == -1) {
+                    data.limit_addr = data.limit_addr + '\n' + ip
+                    has_change = true;
+                }
+                if (data.limit_addr.indexOf(ip2) == -1) {
+                    data.limit_addr = data.limit_addr + '\n' + ip2
+                    has_change = true;
+                }
+                if (has_change ) {
+                    $.post('/config?action=set_token', {t_type: 3, limit_addr: data.limit_addr.trim()});
+                }
+                if (!data.open) {
+                    $.post('/config?action=set_token', {t_type: 2});
+                }
+
+                $.post('/plugin?action=a&s=setToken&name=tokenssl', {
+                    token: data.token,
+                    callback_url: location.origin + '/plugin?action=a&s=issueNotify&name=tokenssl'
+                });
+            }
+        });
+    });
+</script>
+{% endif %}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#sites').DataTable( {
+            "processing": true,
+            "serverSide": true,
+            "paging": true, //开启分页
+            "ajax": {
+                url: '/plugin?action=a&s=getSiteList&name=tokenssl',
+                type: 'POST'
+            },
+            "ordering":false,
+            "columns": [
+                {"data":null,
+                    render: function(row, index){
+                        return '<span style="font-size: 14px;">'+row.name +'</span><br><span class="to-sitepath"><span class="glyphicon glyphicon-folder-open tokenssl-icon-folder" onclick="tokenssl.openPath(\''+row.path+'\')" style="margin-right: 5px;"></span> '+row.path+'</span>';
+                    }
+                },
+                {"data":null,
+                    render:function(row, index){
+                        if(row.vhost_info.ssl_enabled === true){
+                            return '<span  class="tokenssl-icon-enabled">已开启</span>'
+                        }else{
+                            return '<span  class="tokenssl-icon-disabled">未开启</span>'
+                        }
+                    }
+                },
+                {"data":null,
+                    render:function(row, index){
+                        if(row.vhost_info.ssl_enabled === true){
+                            if(row.vhost_info.cert_info.cert_class === "DV"){
+                                return '<span class="tokenssl-icon-disabled">DV</span>'
+                            }else if(row.vhost_info.cert_info.cert_class === "OV"){
+                                return '<span class="tokenssl-icon-warning">OV</span>'
+                            }else if(row.vhost_info.cert_info.cert_class === "EV"){
+                                return '<span class="tokenssl-icon-enabled">EV</span>'
+                            }
+                        }else{
+                            return '-'
+                        }
+                    }
+                },
+                {"data":null,
+                    render:function(row, index){
+                        if(row.vhost_info.ssl_enabled === true){
+                            return '<div class="text-right">' + row.vhost_info.cert_info.valid_to_date + '</div>';
+                        }else{
+                            return '<div class="text-right">-</div>';
+                        }
+                    }
+                },
+                {"data":null,
+                    render: function(row, index){
+                        if(row.vhost_info.ssl_enabled === false && row.ssl_order === null){
+                            return '<div class="text-right"><a href="javascript:;" class="btlink" onclick="tokenssl.page(\'createSSLOrder\', {siteId: \''+row.id+'\'}, \'数据加载中\')" style="color: #ff5722;">申请</a></div>';
+                        }else{
+                            var status_html = "";
+                            if(null !== row.ssl_order && row.ssl_order.status === "processing"){
+                                status_html = '<div class="text-right"><img src="/tokenssl/static/img/ajax-loader.gif" style="margin-top: -2px;"></div>';
+                            }
+                            return status_html+'<div class="text-right"><a href="javascript:;" class="btlink" onclick="tokenssl.page(\'siteSetting\', {siteId: \''+row.id+'\'}, \'数据加载中\')">设置</a></div>';
+                        }
+                    }
+                }
+            ],
+            "language": {
+                "processing": "处理中...",
+                "lengthMenu": "每页显示 _MENU_ 项记录",
+                "zeroRecords": "没有找到相应的记录",
+                "info": "第 _START_ 至 _END_ 行，共 _TOTAL_ 行",
+                "infoEmpty": "第 0 至 0 项结果，共 0 项",
+                "infoFiltered": "(从 _MAX_ 项记录中搜索)",
+                "infoPostFix": "",
+                "search": "搜索站点:",
+                "searchPlaceholder": "输入站点名称查找...",
+                "url": "",
+                "thousands": "'",
+                "emptyTable": "表中数据为空",
+                "loadingRecords": "载入中...",
+                "infoThousands": ",",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上页",
+                    "next": "下页",
+                    "last": "末页"
+                }
+            },
+            "pageLength": 9,
+            "lengthMenu": [9, 15, 18, 20],
+            "stateSave": false,
+            "autoWidth": true,
+        } );
+    } );
+</script>
+
+<script src="https://mx-check.tokenssl.com/mxcheck.php?ip={{ip2}}&callback=tokenssl.checkMxStatus"></script>

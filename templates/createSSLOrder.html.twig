@@ -1,0 +1,34 @@
+{% include "common.html.twig" %}
+<div class="page-desc">
+    <div class="tokenssl-page-title">申请 SSL 证书</div>
+    您可以很容易从市场寻找到 Token SSL 卖家。
+</div>
+<div class="line" style="padding-top: 0px;">
+    <div class="to_tvalue" style="height: auto;">
+        <div>网站域名:</div>
+        {% if site.site_domains is not empty %}
+            <textarea readonly disabled class="bt-input-text" style="padding: 5px 10px;margin: 0px; width: 100%; height: 116px; line-height: 18px; border: 1px solid rgb(221, 221, 221);" onclick="return false;">{% for domain in site.site_domains %}{{ domain }}
+{% endfor %}</textarea>
+        {% else %}
+            暂无域名
+        {% endif %}
+    </div>
+</div>
+<div class="line" style="padding-top: 0px;">
+    <div>Token:</div>
+    <input type="text" name="token" class="bt-input-text" style="width: 100%;" maxlength="16" minlength="16" placeholder="请填写您获得的 Token" required autofocus />
+</div>
+<div class="line">
+    <span class="to_tvalue">
+        <button onclick="javascript:tokenssl.checkToken('{{ site.id }}', $('input[name=token]').val());" class="btn btn-success btn-sm" title="立即申请"> 检查 Token</button>
+        <button onclick="javascript:tokenssl.page('siteSetting',{siteId:'{{ site.id }}'});" class="btn btn-default btn-sm btn-nobg" title="返回站点详情" style="color: #8c8b8b !important;"> 放弃</button>
+    </span>
+</div>
+<script>
+    // 初始化购物车价格
+    tokenssl.localCartTotal($('label[data-default-selected]'));
+    // 更好的购物车产品点击捕获
+    $('div.to-cart.ssl-product').click(function(){
+        $(this).children()[0].click();
+    })
+</script>

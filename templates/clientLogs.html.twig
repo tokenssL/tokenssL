@@ -1,0 +1,107 @@
+<div class="page-desc">
+    <div class="tokenssl-page-title">客户端操作日志</div>
+    此页面列出了自您安装 TokenSSL 客户端以来的操作日志和定时任务(CronTab)的运行日志, 便于您审计操作和查看历史。
+</div>
+
+<table id="sites" class="table table-hover tokenssl-table divtable " style="width:100%">
+    <thead>
+    <tr>
+        <th>编号</th>
+        <th>状态</th>
+        <th>详情</th>
+        <th>操作时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td colspan="8" style="text-align: center;">
+            <img src="/tokenssl/static/img/ajax-loader.gif" style="height: 15px;"> 数据加载中...
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#sites').DataTable( {
+            "processing": true,
+            "serverSide": true,
+            "paging": true, //开启分页
+            "ajax": {
+                url:'/plugin?action=a&s=getClientLogList&name=tokenssl',
+                type:'POST'
+            },
+            "ordering":false,
+            "columns": [
+                {"data":null,
+                    render: function(row, index){
+                        return row.id;
+                    }
+                },
+                {"data":null,
+                    render:function(row, index){
+                        if("success"===row.status){
+                            return "成功"
+                        }else{
+                            return "失败"
+                        }
+                    }
+                },
+                {"data":null,
+                    render:function(row, index){
+                        return row.description
+                    }
+                },
+                {"data":null,
+                    render:function(row, index){
+                        return formatDateToNormal(row.created_at)
+                    }
+                },
+            ],
+            "language": {
+                'loadingRecords': '&nbsp;',
+                'processing': '<div class="spinner"></div>',
+                "lengthMenu": "每页显示 _MENU_ 项记录",
+                "zeroRecords": "没有找到相应的记录",
+                "info": "第 _START_ 至 _END_ 行，共 _TOTAL_ 行",
+                "infoEmpty": "第 0 至 0 项结果，共 0 项",
+                "infoFiltered": "(从 _MAX_ 项记录中搜索)",
+                "infoPostFix": "",
+                "search": "搜索日志:",
+                "searchPlaceholder": "输入关键词查找...",
+                "url": "",
+                "thousands": "'",
+                "emptyTable": "当前客户端还没有操作日志",
+                "infoThousands": ",",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上页",
+                    "next": "下页",
+                    "last": "末页"
+                }
+            },
+            "pageLength": 12,
+            "lengthMenu": [12, 15, 18, 20],
+            "stateSave": false,
+            "autoWidth": true,
+        } );
+    } );
+
+function formatDateToNormal(time) {
+    var date = new Date(time);
+    var year = date.getFullYear(),
+        month = date.getMonth() + 1,//月份是从0开始的
+        day = date.getDate(),
+        hour = date.getHours(),
+        min = date.getMinutes(),
+        sec = date.getSeconds();
+    var newTime = year + '-' +
+        month + '-' +
+        day + ' ' +
+        hour + ':' +
+        min + ':' +
+        sec;
+    return newTime;
+}
+</script>

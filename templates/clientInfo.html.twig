@@ -1,0 +1,31 @@
+<div class="page-desc">
+    <div class="tokenssl-page-title">设备信息</div>
+    此页面展示了您本地客户端的设备信息和运行状态。
+</div>
+{# 服务器基本信息 #}
+<div>
+    <div class="line">
+        <span class="tname">设备UUID</span>
+        <span class="to_tvalue">{{ client.id }}</span>
+    </div>
+    <div class="line">
+        <span class="tname">运行状态</span>
+        <span class="to_tvalue">{{ client.client_status|upper }}</span>
+    </div>
+    <div class="line">
+        <span class="tname">注册日期</span>
+        <span class="to_tvalue">{{ client.registered_at }}</span>
+    </div>
+    <div class="line">
+        <span class="tname">软件版本</span>
+        <span class="to_tvalue">{{ client.version }}</span>
+    </div>
+    <div class="line">
+        <span class="tname">客户端IP</span>
+        <span class="to_tvalue">{{ client.ip_address }}</span>
+    </div>
+    <div class="line">
+        <span class="tname">客户端ID</span>
+        <span class="to_tvalue">{{ client.client_id|upper }}</span>
+    </div>
+</div>

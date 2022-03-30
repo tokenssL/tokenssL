@@ -1,0 +1,419 @@
+{% include 'common.html.twig' %}
+<div class="tokenssl-page-header">
+    <button onclick="javascript:tokenssl.page('siteList');" class="btn btn-default btn-sm glyphicon glyphicon-arrow-left" title="返回站点列表"> 返回站点列表</button>
+</div>
+{# 站点的SSL证书信息展示区域 #}
+<table class="table tokenssl-table divtable  dataTable no-footer tokenssl-infotable top-title">
+    <thead>
+    <tr>
+        <th>站点名称</th>
+        <th>SSL加密</th>
+        <th>证书级别</th>
+        <th>强制HTTPS</th>
+        <th class="text-right">自动续费</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <span style="font-size: 14px;">{{ site.name }}</span>
+            <br>
+            <span class="to-sitepath"><span class="glyphicon glyphicon-folder-open tokenssl-icon-folder" onclick="tokenssl.openPath('{{ site.path }}')"></span>: {{ site.path }}</span>
+        </td>
+        <td>
+            {% if site.vhost_info.ssl_enabled is same as(true) %}
+                <span  class="tokenssl-icon-enabled">已开启</span>
+            {% else %}
+                <span  class="tokenssl-icon-disabled">未开启</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if site.vhost_info.ssl_enabled is same as(true) %}
+                {% if site.vhost_info.cert_info.cert_class is same as("DV") %}
+                    <span class="tokenssl-icon-disabled">域名验证 (DV)</span>
+                {% elseif site.vhost_info.cert_info.cert_class is same as("OV") %}
+                    <span class="tokenssl-icon-warning">企业验证 (OV)</span>
+                {% elseif site.vhost_info.cert_info.cert_class is same as("EV") %}
+                    <span class="tokenssl-icon-enabled">扩展验证 (EV)</span>
+                {% endif %}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+        <td>
+            {% if site.vhost_info.is_redirect_https is same as(true) %}
+                <span  class="tokenssl-icon-enabled">已开启</span>
+            {% else %}
+                <span  class="tokenssl-icon-disabled">未开启</span>
+            {% endif %}
+        </td>
+        <td class="text-right">
+            <div class="text-right" style="display: inline-block">
+                <input class="btswitch btswitch-ios" id="autoRenew" type="checkbox" {% if ssl_order.is_auto_renew is same as(1) %}checked{% endif %}>
+                <label class="btswitch-btn" for="autoRenew" onclick="tokenssl.toggleAutoRenewal('{{ site.id }}')"></label>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+{# 站点订单操作 #}
+{% if ssl_order is not empty  and ssl_order.status is same as('processing')%}
+<div style="margin-top: 1rem; background: #ffffff; padding: 10px 0px; border: 1px solid #ddd;">
+    <button onclick="javascript:tokenssl.checkSSLOrderStatus('{{ site.id }}');" class="btn btn-info btn-sm" title="检查签发状态" style="margin-left: 1rem;"><i class="glyphicon glyphicon-refresh"></i> 检查签发状态</button>
+    <button onclick="javascript:tokenssl.recheckDomainValidation('{{ site.id }}');" class="btn btn-info btn-sm" title="重新执行验证" style="margin-left: 1rem;"><i class="glyphicon glyphicon-refresh"></i> 重新执行验证</button>
+    <button onclick="javascript:tokenssl.removeSSLOrder('{{ site.id }}');" class="btn btn-warning btn-sm" title="删除证书订单" style="margin-left: 1rem;"><i class="glyphicon glyphicon-remove"></i> 删除证书订单</button>
+</div>
+{% endif %}
+{# 其他信息和业务操作 #}
+<div class="row tokenssl-row">
+    {#一些通知信息和交互操作#}
+    {% if site.vhost_info.ssl_enabled is same as(false) and ssl_order is not empty and ssl_order.status is same as('issued') %}
+        <script>
+            tokenssl.gVars.siteSetting.key = `{{ ssl_order.key_code }}`;
+            tokenssl.gVars.siteSetting.cert = `{{ ssl_order.cert_code }}`;
+            tokenssl.gVars.siteSetting.siteId = '{{ site.id }}';
+        </script>
+        <div class="col-md-12" style="background: #fff; padding-right: 0px;">
+            <div class="to-warn-div">
+                <span class="w-title">提示</span>：我们为当前站点找到了一个还未部署的SSL证书订单, 您可以尝试点击下列按钮来部署证书到本站点。
+                <div style="margin-top: 10px;"><button class="btn btn-sm btn-success" onclick="tokenssl.setSSL('{{ site.name }}', tokenssl.gVars.siteSetting.cert, tokenssl.gVars.siteSetting.key)">立即安装证书</button></div>
+            </div>
+        </div>
+    {% endif %}
+    {% if site.vhost_info.ssl_enabled is same as(true) %}
+        {% if ssl_order is empty %}
+            <div class="col-md-12" style="background: #fff; padding-right: 0px;">
+                <div class="to-warn-div">
+                    <span class="w-title">注意</span>：当前站点并未使用TokenSSL设置自动化部署证书, 您在未来可能会面临无法及时替换过期证书而带来一些风险, 如：到期后站点无法访问HTTPS, 业务下线, 访问不稳定从而影响SEO排名, 浏览器提示用户网站证书不受信任等。
+                    <div style="margin-top: 10px;"><button class="btn btn-sm btn-success" onclick="tokenssl.page('createSSLOrder',{siteId: '{{ site.id }}'},'正在获取适用的安全证书产品信息')">立即部署安全证书</button></div>
+                </div>
+            </div>
+        {% endif %}
+    {% elseif ssl_order is empty %}
+        <div class="col-md-12" style="background: #fff; padding-right: 0px;">
+            <div class="to-warn-div">
+                <span class="w-title">特别注意</span>：当前站点并未配置 SSL 安全证书, 这将无法为用户提供安全的HTTPS加密访问, 大多数浏览器可能会将您的站点标记为"不安全", 同时也无法满足 Google、Apple、微信小程序等安全技术要求。
+                <div style="margin-top: 10px;"><button class="btn btn-sm btn-success" onclick="tokenssl.page('createSSLOrder',{siteId: '{{ site.id }}'},'正在获取适用的安全证书产品信息')">立即部署安全证书</button></div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div style="margin-left: 15px;">
+        <!-- Nav tabs -->
+        <div class="ui top attached tabular menu tokenssl-tab">
+            {% if ssl_order is not empty %}
+                <a class="item {% if site.insecure_domains is empty or ssl_order.status is same as('processing')%}active{% endif %}" data-tab="orderDetails" aria-controls="profile" role="tab" data-toggle="tab">
+                    <i class="glyphicon glyphicon-shopping-cart"></i> 订单信息
+                </a>
+            {% endif %}
+            {% if ssl_order.status is same as('processing') %}
+                <a class="item" data-tab="defaultValidation" aria-controls="profile" role="tab" data-toggle="tab">
+                    <svg style="top: 2px; position: relative; height: 1.3rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-wide-connected" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434L8.932.727zM8 12.997a4.998 4.998 0 1 0 0-9.995 4.998 4.998 0 0 0 0 9.996z"/>
+                        <path fill-rule="evenodd" d="M7.375 8L4.602 4.302l.8-.6L8.25 7.5h4.748v1H8.25L5.4 12.298l-.8-.6L7.376 8z"/>
+                    </svg>
+                    自动验证说明
+                </a>
+                <a class="item" data-tab="dnsValidation" aria-controls="profile" role="tab" data-toggle="tab">
+                    <svg style="top: 2px; position: relative; height: 1.3rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4H2.255a7.025 7.025 0 0 1 3.072-2.472 6.7 6.7 0 0 0-.597.933c-.247.464-.462.98-.64 1.539zm-.582 3.5h-2.49c.062-.89.291-1.733.656-2.5H3.82a13.652 13.652 0 0 0-.312 2.5zM4.847 5H7.5v2.5H4.51A12.5 12.5 0 0 1 4.846 5zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5H7.5V11H4.847a12.5 12.5 0 0 1-.338-2.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12H7.5v2.923c-.67-.204-1.335-.82-1.887-1.855A7.97 7.97 0 0 1 5.145 12zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11H1.674a6.958 6.958 0 0 1-.656-2.5h2.49c.03.877.138 1.718.312 2.5zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12h2.355a7.967 7.967 0 0 1-.468 1.068c-.552 1.035-1.218 1.65-1.887 1.855V12zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5h-2.49A13.65 13.65 0 0 0 12.18 5h2.146c.365.767.594 1.61.656 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4H8.5V1.077c.67.204 1.335.82 1.887 1.855.173.324.33.682.468 1.068z"/>
+                    </svg>
+                    DNS验证信息
+                </a>
+                <a class="item" data-tab="httpValidation" aria-controls="profile" role="tab" data-toggle="tab">
+                    <svg style="top: 2px; position: relative; height: 1.3rem;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-binary-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2 2a2 2 0 0 1 2-2h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm7.5 1.5v-2l3 3h-2a1 1 0 0 1-1-1zm-2.45 8.385c0 1.415-.548 2.206-1.524 2.206C4.548 14.09 4 13.3 4 11.885c0-1.412.548-2.203 1.526-2.203.976 0 1.524.79 1.524 2.203zm-1.524-1.612c-.542 0-.832.563-.832 1.612 0 .088.003.173.006.252l1.559-1.143c-.126-.474-.375-.72-.733-.72zm-.732 2.508c.126.472.372.718.732.718.54 0 .83-.563.83-1.614 0-.085-.003-.17-.006-.25l-1.556 1.146zm6.061.624V14h-3v-.595h1.181V10.5h-.05l-1.136.747v-.688l1.19-.786h.69v3.633h1.125z"/>
+                    </svg>
+                    文件验证信息
+                </a>
+            {% endif %}
+            {% if site.vhost_info.ssl_enabled is same as(true) %}
+                <a class="item {% if ssl_order is empty and (site.insecure_domains is empty or site.vhost_info.cert_info is not empty) %}active{% endif %}" data-tab="certDetails" aria-controls="profile" role="tab" data-toggle="tab">
+                    <i class="glyphicon glyphicon-equalizer"></i> 证书信息
+                </a>
+                <a class="item{% if ssl_order.status is same as('issued') and site.insecure_domains is not empty %} active{% endif %}" data-tab="secureDetails" aria-controls="messages" role="tab" data-toggle="tab">
+                    <i class="glyphicon glyphicon-globe"></i> 域名加密状态
+                </a>
+                {% if ssl_order.status is same as('issued') %}
+                    <a class="item" data-tab="keyCode" aria-controls="messages" role="tab" data-toggle="tab">
+                        <i class="glyphicon glyphicon-cog"></i> 私钥(KEY)
+                    </a>
+                {% endif %}
+                {% if ssl_order.status is same as('issued') %}
+                    <a class="item" data-tab="certCode" aria-controls="messages" role="tab" data-toggle="tab">
+                        <i class="glyphicon glyphicon-cog"></i> 证书代码
+                    </a>
+                {% endif %}
+                {% if ssl_order.status is same as('issued') %}
+                    <a class="item" data-tab="csrCode" aria-controls="messages" role="tab" data-toggle="tab">
+                        <i class="glyphicon glyphicon-cog"></i> CSR代码
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            {% if ssl_order.status is same as('processing') %}
+                <div data-tab="defaultValidation" class="ui tab">
+                    <div class="ui-tab-content">
+                        <p style="text-indent: 2em;">默认采用文件验证方式自动验证，若一直不成功，可以查看并采用DNS完成验证。
+                            自动化验证过程通常会在5分钟内完成, 若长时间未完成验证, 请您检查服务器防火墙、云防火墙(如: 阿里云ECS安全策略)、网站防火墙等软件规则，并将证书颁发机构的IP地址添加至您的防火墙白名单:</p>
+                        <ul style="margin: 10px 0px; list-style: disc; padding-left: 15px;">
+                            <li>91.199.212.133</li>
+                            <li>91.199.212.132</li>
+                        </ul>
+                        <p>确保证书颁发机构可以访问您服务器的 80 和 443 端口, 通过左侧菜单也可联系我们的在线工程师获取支持。</p>
+                    </div>
+                </div>
+                <div data-tab="httpValidation" class="ui tab">
+                    <div class="ui-tab-content">
+                        <p style="text-indent: 2em;">颁发机构通过各条域名访问您此站点上的验证文件来完成验证，如果长时间未完成，请您检查网站是否存在对应的验证文件，或确保验证文件信息是否正确？</p>
+                        <p>文件路径：</p>
+                        <pre>{{ dcv_data.http_path }}</pre>
+                        <p>文件名称：</p>
+                        <pre>{{ dcv_data.http_filename }}</pre>
+                        <p>文件内容(仅三行)：</p>
+                        <pre>{{ dcv_data.http_filecontent }}</pre>
+                        <b>*. 文件验证不可用于申请通配符！</b>
+                    </div>
+                </div>
+                <div data-tab="dnsValidation" class="ui tab">
+                    <div class="ui-tab-content">
+                        <p style="text-indent: 2em;">使用DNS记录来验证您的域名控制权并签发证书，请您为每条需要验证的域名的顶级域名分别创建一条下列所示的DNS CNAME记录</p>
+                        <ul style="margin: 10px 0px; list-style: disc; padding-left: 15px;list-style: none;">
+                            <li>主机头：<code>{{ dcv_data.dns_host }}</code></li>
+                            <li>记录类型：<code>{{ dcv_data.dns_type }}</code></li>
+                            <li>主机记录/记录值：<code>{{ dcv_data.dns_value }}</code></li>
+                        </ul>
+                        <p>证书颁发机构一般会在15分钟内完成域名DNS验证并且签发您的证书，目前DNS验证方式无法进行自动续期，我们将会在未来版本中优化。</p>
+                    </div>
+                </div>
+            {% endif %}
+            {% if ssl_order.status is same as('issued') %}
+            <div class="ui tab" data-tab="csrCode">
+                <div class="col-md-12" style="padding: 0px;">
+                    <pre style="border-top: none; border-radius: 0px; background: white;">{{ ssl_order.csr_code }}</pre>
+                </div>
+            </div>
+            <div class="ui tab" data-tab="certCode">
+                <div class="col-md-12" style="padding: 0px;">
+                    <pre style="border-top: none; border-radius: 0px; background: white;">{{ ssl_order.cert_code }}</pre>
+                </div>
+            </div>
+            <div class="ui tab" data-tab="keyCode">
+                <div class="col-md-12" style="padding: 0px;">
+                    <pre style="border-top: none; border-radius: 0px; background: white;">{{ ssl_order.key_code }}</pre>
+                </div>
+            </div>
+            {% endif %}
+            {% if ssl_order is not empty %}
+                <div class="ui tab {% if site.insecure_domains is empty or ssl_order.status is same as('processing')%}active{% endif %}" data-tab="orderDetails">
+                    <div class="col-md-12" style="padding: 0px;">
+                        <table class="table tokenssl-table divtable  dataTable no-footer tokenssl-infotable">
+                            <tbody>
+                            <tr>
+                                <td>证书类型</td>
+                                <td>
+                                    <span style="font-size: 14px;">{{ ssl_order.type }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>有效周期</td>
+                                <td>
+                                    {% if ssl_order.period is same as('weekly') %} 1周 {% endif %}
+                                    {% if ssl_order.period is same as('monthly') %} 1个月 {% endif %}
+                                    {% if ssl_order.period is same as('quarterly') %} 3个月 {% endif %}
+                                    {% if ssl_order.period is same as('semi-annually') %} 半年 {% endif %}
+                                    {% if ssl_order.period is same as('annually') %} 1年 {% endif %}
+                                    {% if ssl_order.period is same as('biennially') %} 2年 {% endif %}
+                                    {% if ssl_order.period is same as('triennially') %} 3年 {% endif %}
+                                    {% if ssl_order.period is same as('quadrennially') %} 4年 {% endif %}
+                                    {% if ssl_order.period is same as('quinquennially') %} 5年 {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>订单状态</td>
+                                <td>
+                                    {% if ssl_order.status is same as('processing') %}
+                                        <img src="/tokenssl/static/img/ajax-loader.gif" style="margin-top: -2px;"> 验证中
+                                        <span id="validating-mx-status"></span>
+                                    {% elseif ssl_order.status is same as('issued') %}
+                                        <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjAzMjA2MTE1MjI1IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwOTggMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjM0OTMiIHdpZHRoPSI1My42MTMyODEyNSIgaGVpZ2h0PSI1MCIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTQ3Ni44MDgwNDUgMC4wMDAwNDNDMjEzLjQwMTc1MyAwLjEwNjY4NS0wLjAzMTk5MyAyMTMuNjg5NzMgMCA0NzcuMDc0NjkzUzIxMy41NTEwNTIgOTUzLjk4OTM4IDQ3Ni45NDY2OCA5NTQuMDIxMzczczQ3Ni45NTczNDQtMjEzLjQxMjQxNyA0NzcuMDg1MzE1LTQ3Ni44MDgwNDVBNDc3LjAxMDY2NSA0NzcuMDEwNjY1IDAgMCAwIDQ3Ni44MDgwNDUgMC4wMDAwNDN6IG0yNzMuNzYxMjUyIDM1My4zNjk2NzFMNDQxLjg2MTM4OCA2NjEuODUzNjc0YTQzLjE5MDEgNDMuMTkwMSAwIDAgMS02Mi4wMjMxMTcgMEwyMDIuMjE0OTg0IDQ4NC4yNTE3MTVhNDMuODY0MDc5IDQzLjg2NDA3OSAwIDEgMSA2Mi4wMzM3ODEtNjIuMDMzNzgybDE0Ny4yMTk1OSAxNDcuMjE5NTkgMjc3Ljg5ODk3LTI3Ni44NjQ1NGE0My44NjE5NDYgNDMuODYxOTQ2IDAgMSAxIDYyLjAyMzExNyA2Mi4wMzM3ODF6IG0wIDAiIHAtaWQ9IjM0OTQiIGZpbGw9IiMwMGE5MDciPjwvcGF0aD48L3N2Zz4=" style="height: 15px;margin-top: -2px;"> 已签发
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>创建日期</td>
+                                <td>
+                                    {{ ssl_order.created_at }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>订单域名</td>
+                                <td>
+                                    <div class="tokenssl-domaincontainer">
+                                        {% for domain in ssl_order.domains %}
+                                            <div>{{ domain }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+            {% if site.vhost_info.ssl_enabled is same as(true) %}
+                <div class="ui tab {% if ssl_order is empty and (site.insecure_domains is empty or site.vhost_info.cert_info is not empty) %}active{% endif %}" data-tab="certDetails">
+                    {#  证书有效期和基本信息  #}
+                    <div class="col-md-12" style="padding: 0px;">
+                        <table class="table tokenssl-table divtable  dataTable no-footer tokenssl-infotable">
+                            <tbody>
+                            <tr>
+                                <td>证书编号</td>
+                                <td>
+                                    <div>{{ site.vhost_info.cert_info.serialNumberHex }}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>证书品牌</td>
+                                <td>
+                                    <div>{% if site.vhost_info.cert_info.issuer.CN is not empty %}{{ site.vhost_info.cert_info.issuer.CN }}{% elseif site.vhost_info.cert_info.issuer.O is not empty %}{{ site.vhost_info.cert_info.issuer.O }}{% else %}未知的证书品牌{% endif %}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>主题名称</td>
+                                <td>
+                                    <div>{{ site.vhost_info.cert_info.subject.CN }}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>证书状态</td>
+                                <td>
+                                    <div><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjAzMjA2MTE1MjI1IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwOTggMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjM0OTMiIHdpZHRoPSI1My42MTMyODEyNSIgaGVpZ2h0PSI1MCIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTQ3Ni44MDgwNDUgMC4wMDAwNDNDMjEzLjQwMTc1MyAwLjEwNjY4NS0wLjAzMTk5MyAyMTMuNjg5NzMgMCA0NzcuMDc0NjkzUzIxMy41NTEwNTIgOTUzLjk4OTM4IDQ3Ni45NDY2OCA5NTQuMDIxMzczczQ3Ni45NTczNDQtMjEzLjQxMjQxNyA0NzcuMDg1MzE1LTQ3Ni44MDgwNDVBNDc3LjAxMDY2NSA0NzcuMDEwNjY1IDAgMCAwIDQ3Ni44MDgwNDUgMC4wMDAwNDN6IG0yNzMuNzYxMjUyIDM1My4zNjk2NzFMNDQxLjg2MTM4OCA2NjEuODUzNjc0YTQzLjE5MDEgNDMuMTkwMSAwIDAgMS02Mi4wMjMxMTcgMEwyMDIuMjE0OTg0IDQ4NC4yNTE3MTVhNDMuODY0MDc5IDQzLjg2NDA3OSAwIDEgMSA2Mi4wMzM3ODEtNjIuMDMzNzgybDE0Ny4yMTk1OSAxNDcuMjE5NTkgMjc3Ljg5ODk3LTI3Ni44NjQ1NGE0My44NjE5NDYgNDMuODYxOTQ2IDAgMSAxIDYyLjAyMzExNyA2Mi4wMzM3ODF6IG0wIDAiIHAtaWQ9IjM0OTQiIGZpbGw9IiMwMGE5MDciPjwvcGF0aD48L3N2Zz4=" style="height: 15px;margin-top: -2px;"> 有效</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>颁发机构</td>
+                                <td>
+                                    <div>{{ site.vhost_info.cert_info.issuer.O }}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>生效时间</td>
+                                <td>
+                                    <div>{{ site.vhost_info.cert_info.valid_from }}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>过期时间</td>
+                                <td>
+                                    <div>{{ site.vhost_info.cert_info.valid_to }}</div>
+                                </td>
+                            </tr>
+                            {% if ssl_order.vendor_id is not empty %}
+                                <tr>
+                                    <td>订单编号</td>
+                                    <td>
+                                        <div>{{ ssl_order.vendor_id }}</div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td>包含域名</td>
+                                <td>
+                                    <div class="tokenssl-domaincontainer">
+                                        {% for domain in site.cert_domains %}
+                                            <div>{{ domain }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="ui tab {% if ssl_order.status is same as('issued') and site.insecure_domains is not empty %}active{% endif %}" data-tab="secureDetails">
+                    {# 域名信息 #}
+                    <div class="col-md-12" style="padding: 0px;">
+                        <table class="table tokenssl-table divtable  dataTable no-footer tokenssl-infotable">
+                            <tbody>
+                            {% if ssl_order is not empty %}
+                                {#                <tr>#}
+                                {#                    <td colspan="2">#}
+
+                                {#                        <button class="btn btn-sm btn-primary" onclick="tokenssl.reissueSSLOrder('{{ site.name }}')">重签证书</button>#}
+
+                                {#                        <button class="btn btn-sm btn-primary" onclick="tokenssl.createNewFullSSL('{{ site.name }}')">关闭证书</button>#}
+                                {#                    </td>#}
+                                {#                </tr>#}
+                            {% endif %}
+                            <tr>
+                                <td>已加密域名</td>
+                                <td>
+                                    <div class="tokenssl-domaincontainer">
+                                        {% for domain in site.secure_domains %}
+                                            <div><i class="glyphicon glyphicon-lock tokenssl-text-success"></i> {{ domain }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% if site.insecure_domains is not empty %}
+                                <tr>
+                                    <td>未加密域名</td>
+                                    <td>
+                                        <div class="tokenssl-domaincontainer">
+                                            {% for domain in site.insecure_domains %}
+                                                <div><i class="glyphicon glyphicon-warning-sign tokenssl-text-danger"></i> {{ domain }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% if ssl_order.status is same as('issued') %}
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="to-altert warn">
+                                                注意: 存在未加密的域名, 建议立即附加到当前证书内进行加密保护。附加过程是自动的, 完成验证后将自动更新站点证书。
+                                                <p>
+                                                    <button class="btn btn-sm btn-success" onclick="tokenssl.reissueSSLOrder('{{ site.id }}')">立即附加</button>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    {% if ssl_order is not empty %}
+    {#let order_status = '{{ ssl_order.status }}';#}
+    {#if(order_status==='processing'){#}
+    {#    let refJob = setInterval(function(){#}
+    {#        tokenssl.checkSSLOrderStatus('{{ site.name }}', refJob);#}
+    {#    }, 2000);#}
+    {#}#}
+    {% endif %}
+    $(document).ready(function(){
+        /**
+         * 解决多页面的出现的TabPanel切换问题
+         */
+        $('.tokenssl-tab .item').on('click', function () {
+            var tab = $(this).attr('data-tab');
+            $('.tab-content>.ui.tab.active').removeClass('active');
+            $('.tab-content>.ui.tab[data-tab="' + tab + '"]').addClass('active');
+            $('.tokenssl-tab .item.active').removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+</script>
+
+{% if ssl_order.status is same as('processing') %}
+<script src="https://mx-check.tokenssl.com/mxcheck.php?ip={{bt_ip}}&callback=tokenssl.checkMxStatus"></script>
+{% endif %}
