@@ -150,8 +150,8 @@
                     "last": "末页"
                 }
             },
-            "pageLength": 9,
-            "lengthMenu": [9, 15, 18, 20],
+            "pageLength": 8,
+            "lengthMenu": [8, 15, 18, 20],
             "stateSave": false,
             "autoWidth": true,
         } );
@@ -159,6 +159,7 @@
 </script>
 
 <script>
+$('.bt-form').removeClass('preloading');
 $(document).ready(function () {
     tokenssl.triggerMxCheck(['{{ip2}}']);
 });

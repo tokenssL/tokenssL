@@ -1,3 +1,24 @@
+.spin-cog {
+    animation: tokenssl-spin 1.5s ease-in-out infinite;
+    -webkit-animation: tokenssl-spin 1.5s ease-in-out infinite;
+    margin-left: -7px;
+    margin-top: 40px;
+    display: inline-block;
+    position: absolute;
+}
+@keyframes tokenssl-spin {
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes tokenssl-spin {
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+.bt-form.preloading, .bt-form.preloading .bt-w-main, .bt-form.preloading .bt-w-main .plugin_body{
+    min-height: 100%;
+}
 .dataTables_wrapper{
     width: 100%;
 }
@@ -151,7 +172,6 @@ table.dataTable.no-footer {
 }
 .tokenssl-bootstrap{
     text-align: center;
-    margin-top: 100px;
 }
 .tokenssl-main-logo{
     height: 145px;
