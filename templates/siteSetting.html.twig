@@ -205,10 +205,15 @@
                 <div data-tab="dnsValidation" class="ui tab">
                     <div class="ui-tab-content">
                         <p>使用DNS记录来验证您的域名控制权并签发证书，请您为每条需要验证的域名的顶级域名分别创建一条下列所示的DNS CNAME记录</p>
-                        <ul style="margin: 10px 0px; list-style: disc; padding-left: 15px;list-style: none;">
+                        <ul style="margin: 10px 0px; list-style: disc;list-style: none;">
+                            <li><b>主机头</b>：<code>@</code></li>
+                            <li><b>记录类型</b>：<code>MX</code></li>
+                            <li><b>主机记录/记录值</b>：<code>{{ dcv_data.dns_host }}.CHALLENGE.CERT.REN.</code></li>
+                            <!--
                             <li>主机头：<code>{{ dcv_data.dns_host }}</code></li>
                             <li>记录类型：<code>{{ dcv_data.dns_type }}</code></li>
                             <li>主机记录/记录值：<code>{{ dcv_data.dns_value }}</code></li>
+                            -->
                         </ul>
                         <p>证书颁发机构一般会在15分钟内完成域名DNS验证并且签发您的证书，目前DNS验证方式无法进行自动续期，我们将会在未来版本中优化。</p>
                     </div>
@@ -415,14 +420,6 @@
 </div>
 
 <script>
-    {% if ssl_order is not empty %}
-    {#let order_status = '{{ ssl_order.status }}';#}
-    {#if(order_status==='processing'){#}
-    {#    let refJob = setInterval(function(){#}
-    {#        tokenssl.checkSSLOrderStatus('{{ site.name }}', refJob);#}
-    {#    }, 2000);#}
-    {#}#}
-    {% endif %}
     $(document).ready(function(){
         /**
          * 解决多页面的出现的TabPanel切换问题
@@ -437,10 +434,11 @@
     });
 </script>
 
-{% if ssl_order.status is same as('processing') %}
-<script src="https://mx-check.tokenssl.com/mxcheck.php?ip={{bt_ip}}&callback=tokenssl.checkMxStatus"></script>
+{% if ssl_order is not empty  and ssl_order.status is same as('processing')%}
 <script>
+    window.dns_host = '{{dcv_data.dns_host}}';
     $(document).ready(function(){
+        tokenssl.triggerMxCheck({{site.site_domains | json_encode | raw}});
         tokenssl.refreshOrder('{{site.id}}', 'issued'); 
     });
 </script>

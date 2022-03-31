@@ -1,5 +1,8 @@
 //插件唯一识别ID
-let plugin_id = "tokenssl";
+var plugin_id = "tokenssl";
+var global_mx = [];
+var check_mx_count = 0;
+var has_error = false;
 
 //定义窗口尺寸
 $('.layui-layer-page').css({ 'width': '900px' });
@@ -53,17 +56,25 @@ var tokenssl = {
             }
         });
     },
+    triggerMxCheck: function (domains) {
+        global_mx = [];
+        has_error = false;
+        check_mx_count = domains.length;
+        if (!domains.length) {
+            return;
+        }
+
+        for (var i = 0; i < domains.length; i++) {
+            var domain = domains[i];
+            $.getScript('https://mx-check.tokenssl.com/mxcheck.php?ip=' + domain.replace(/^\*\./, '') + '&callback=tokenssl.checkMxStatus');
+        }
+    },
     checkMxStatus: function (data) {
-        if (data.success) {
+        global_mx[data.ip] = data.success;
+        if (!data.success) {
+            has_error = true;
             if ($('#validating-mx-status').length) {
-                $('#validating-mx-status').text('(您只需等待即可)');
-            }
-            if ($('#mx-not-open').length) {
-                $('#mx-not-open').hide();
-            }
-        } else {
-            if ($('#validating-mx-status').length) {
-                $('#validating-mx-status').text('(无法自动签发通配符，请验证DNS，或开通25端口)');
+                $('#validating-mx-status').html('<br/>请开通开通25端口<span style="color:red">或</span>解析每条域名的DNS(仅需解析一次，后续不需要再次解析)：<br/><b>主机</b> 请和实际申请的通配符一致，不以 <code>*.</code> 开头<br/><b>类型</b> <code>MX</code><br/><b>值</b> <code>' + window.dns_host + '.CHALLENGE.CERT.REN.</code>');
             }
             if ($('#mx-not-open').length) {
                 $('#mx-not-open').show();
@@ -105,7 +116,7 @@ var tokenssl = {
                 }
             }
             setTimeout(function () {
-                tokenssl.refreshOrder(siteId, status); 
+                tokenssl.refreshOrder(siteId, status);
             }, 3000);
         });
     },
@@ -119,18 +130,32 @@ var tokenssl = {
                     if (response.status !== true) {
                         layer.msg(response.msg, { icon: 2 });
                     } else {
-                        request_baotaAjax('system', 'ReWeb', { }, function (response) {
+                        request_baotaAjax('system', 'ReWeb', {}, function (response) {
                             if (response.status !== true) {
                                 layer.msg(response.msg, { icon: 2 });
                             } else {
                                 layer.msg('已成功为宝塔启用面板SSL证书，刷新中', { icon: 1 });
-                                setTimeout(function () {
-                                    location.href = location.href.replace(/^http:\/\//, 'https://');
-                                }, 3000);
+                                tokenssl.setToken(location.origin.replace(/^http:\/\//, 'https://') + '/plugin?action=a&s=issueNotify&name=tokenssl', function () {
+                                    setTimeout(function () {
+                                        location.href = location.href.replace(/^http:\/\//, 'https://');
+                                    }, 3000);
+                                });
                             }
                         }, 10000, 'GET');
                     }
                 });
+            }
+        });
+    },
+    setToken: function (callback_url, callback_on_success) {
+        request_plugin('tokenssl', 'setToken', { token: '', callback_url: callback_url }, function (response) {
+            if (!response.success) {
+                layer.msg(response.message, { icon: 2 });
+                return false;
+            } else {
+                if (callback_on_success) {
+                    callback_on_success()
+                }
             }
         });
     },

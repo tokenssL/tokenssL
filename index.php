@@ -33,6 +33,20 @@ foreach ($extensions as $extension) {
     }
 }
 
+$extensions = [
+    'xdebug',
+    'Xdebug',
+];
+
+foreach ($extensions as $extension) {       
+    if (extension_loaded($extension)) {
+        $requirements[] = [
+            'title' => '需要PHP关闭 ' . $extension . ' 扩展',
+            'desc' => '因为 ' . $extension . ' 与模版引擎存在冲突，请关闭后使用本插件。'
+        ];
+    }
+}
+
 if (!empty($requirements)) {
     $twig = \TokenSSL\Common\TwigUtils::initTwig();
     die($twig->render('PHPRequirements.html.twig', ['errors' => $requirements]));

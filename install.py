@@ -18,9 +18,9 @@ def install():
     print("开始执行安装流程")
     if not os.path.exists(__plugin_path): os.makedirs(__plugin_path)
     copyfile(__plugin_path+"/icon.png", panelPath+"/BTPanel/static/img/soft_ico/ico-tokenssl.png")
+    os.popen("/usr/bin/php "+panelPath+"/plugin/tokenssl/src/PythonUtils.php --fun=\"%s\"" % ('installStreamForwarding')).read()
     os.popen("systemctl disable postfix").read()
     os.popen("systemctl stop postfix").read()
-    os.popen("/usr/bin/php "+panelPath+"/plugin/tokenssl/src/PythonUtils.php --fun=\"%s\"" % ('installStreamForwarding')).read()
     # print("检查并恢复备份的数据库文件...")
     # backup_file = panelPath+'/data/plugin_tokenssl_backup.db'
     # new_database_file = panelPath+'/plugin/tokenssl/databases/main.db'
