@@ -30,7 +30,10 @@ class StreamForwardingUtils
 
         if (!preg_match('/stream[\W\{]+?{/', $content)) {
             if (strpos($content, '/www/server/panel/vhost/nginx/tcp/') === false) {
-                @mkdir('/www/server/panel/vhost/nginx/tcp/', 0755, true);
+                try {
+                    @mkdir('/www/server/panel/vhost/nginx/tcp/', 0755, true);
+                } catch (\Exception $e) {
+                }
             }
 
             $fp = fopen(self::NGINX_CONF, 'w');
