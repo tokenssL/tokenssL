@@ -19,6 +19,7 @@ def install():
     if not os.path.exists(__plugin_path): os.makedirs(__plugin_path)
     copyfile(__plugin_path+"/icon.png", panelPath+"/BTPanel/static/img/soft_ico/ico-tokenssl.png")
     os.popen("/usr/bin/php "+panelPath+"/plugin/tokenssl/src/PythonUtils.php --fun=\"%s\"" % ('installStreamForwarding')).read()
+    os.popen("nginx -t || cp /www/server/nginx/conf/nginx.conf.backup /www/server/nginx/conf/nginx.conf").read()
     os.popen("systemctl disable postfix").read()
     os.popen("systemctl stop postfix").read()
     os.popen("systemctl disable sendmail").read()

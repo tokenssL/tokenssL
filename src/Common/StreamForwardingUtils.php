@@ -36,6 +36,10 @@ class StreamForwardingUtils
                 }
             }
 
+            if (!file_exists(self::NGINX_CONF . '.backup')) {
+                @copy(self::NGINX_CONF, self::NGINX_CONF . '.backup');
+            }
+
             $fp = fopen(self::NGINX_CONF, 'w');
             $content = preg_replace('/events[\W\{]+?{/', "stream {\n\tlog_format tcp_format '\$time_local|\$remote_addr|\$protocol|\$status|\$bytes_sent|\$bytes_received|\$session_time|\$upstream_addr|\$upstream_bytes_sent|\$upstream_bytes_received|\$upstream_connect_time';\n\n\taccess_log /www/wwwlogs/tcp-access.log tcp_format;\n\terror_log /www/wwwlogs/tcp-error.log;\n\tinclude /www/server/panel/vhost/nginx/tcp/*.conf;\n}\n\nevents\n\t{", $content, 1);
             fwrite($fp, $content);
