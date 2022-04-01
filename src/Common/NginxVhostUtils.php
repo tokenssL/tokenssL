@@ -6,33 +6,6 @@ use TokenSSL\TokenSSLException;
 
 class NginxVhostUtils
 {
-    const STREAM_FORWARD = 'include /www/server/panel/plugin/tokenssl/conf/stream.conf;';
-    const NGINX_CONF = '/www/server/nginx/conf/nginx.conf';
-
-    public static function installStreamForwarding()
-    {
-        $fp = fopen(self::NGINX_CONF, 'r');
-        $content = fread($fp, filesize(self::NGINX_CONF));
-        fclose($fp);
-
-        if (strpos($content, self::STREAM_FORWARD) === false) {
-            $fp = fopen(self::NGINX_CONF, 'a');
-            fwrite($fp, PHP_EOL . self::STREAM_FORWARD . PHP_EOL);
-            fclose($fp);
-        }
-    }
-
-    public static function uninstallStreamForwarding()
-    {
-        $fp = fopen(self::NGINX_CONF, 'r');
-        $content = fread($fp, filesize(self::NGINX_CONF));
-        fclose($fp);
-
-        $fp = fopen(self::NGINX_CONF, 'w');
-        fwrite($fp, str_replace(PHP_EOL . self::STREAM_FORWARD . PHP_EOL, '', $content));
-        fclose($fp);
-    }
-
     /**
      * 获取宝塔面板的安装路径
      * @return array|false|string

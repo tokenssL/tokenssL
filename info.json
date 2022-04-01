@@ -5,7 +5,7 @@
   "php": "index.php",
   "name": "tokenssl",
   "ps": "SSL 证书客户端, 自动化部署 SSL 证书。支持大规模部署和集中化管理。",
-  "versions": "1.0.8",
+  "versions": "1.1.0",
   "checks": "/www/server/panel/plugin/tokenssl",
   "author": "tokenssL",
   "date": "2022-04-01",

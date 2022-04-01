@@ -4,6 +4,7 @@ namespace TokenSSL;
 //Boot Composer Loader
 use TokenSSL\Common\CertificateUtils;
 use TokenSSL\Common\NginxVhostUtils;
+use TokenSSL\Common\StreamForwardingUtils;
 use TokenSSL\Common\TokenssLService;
 use TokenSSL\Repository\SiteRep;
 
@@ -71,12 +72,12 @@ class PythonUtils
 
     public static function installStreamForwarding()
     {
-        NginxVhostUtils::installStreamForwarding();
+        StreamForwardingUtils::installStreamForwarding();
     }
 
     public static function uninstallStreamForwarding()
     {
-        NginxVhostUtils::uninstallStreamForwarding();
+        StreamForwardingUtils::uninstallStreamForwarding();
     }
 }
 

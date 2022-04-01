@@ -99,7 +99,7 @@
             <div class="col-md-12" style="background: #fff; padding-right: 0px;">
                 <div class="to-warn-div">
                     <span class="w-title">注意</span>：当前站点并未使用TokenSSL设置自动化部署证书, 您在未来可能会面临无法及时替换过期证书而带来一些风险, 如：到期后站点无法访问HTTPS, 业务下线, 访问不稳定从而影响SEO排名, 浏览器提示用户网站证书不受信任等。
-                    <div style="margin-top: 10px;"><button class="btn btn-sm btn-success" onclick="tokenssl.page('createSSLOrder',{siteId: '{{ site.id }}'},'正在获取适用的安全证书产品信息')">立即部署安全证书</button></div>
+                    <div style="margin-top: 10px;"><button class="btn btn-sm btn-success" onclick="tokenssl.page('createSSLOrder',{siteId: '{{ site.id }}'},'进入申请页面中，请稍等')">立即部署安全证书</button></div>
                 </div>
             </div>
         {% endif %}
@@ -107,7 +107,7 @@
         <div class="col-md-12" style="background: #fff; padding-right: 0px;">
             <div class="to-warn-div">
                 <span class="w-title">特别注意</span>：当前站点并未配置 SSL 安全证书, 这将无法为用户提供安全的HTTPS加密访问, 大多数浏览器可能会将您的站点标记为"不安全", 同时也无法满足 Google、Apple、微信小程序等安全技术要求。
-                <div style="margin-top: 10px;"><button class="btn btn-sm btn-success" onclick="tokenssl.page('createSSLOrder',{siteId: '{{ site.id }}'},'正在获取适用的安全证书产品信息')">立即部署安全证书</button></div>
+                <div style="margin-top: 10px;"><button class="btn btn-sm btn-success" onclick="tokenssl.page('createSSLOrder',{siteId: '{{ site.id }}'},'进入申请页面中，请稍等')">立即部署安全证书</button></div>
             </div>
         </div>
     {% endif %}
@@ -438,7 +438,10 @@
 <script>
     window.dns_host = '{{dcv_data.dns_host}}';
     $(document).ready(function(){
+        {% if has_wildcard is same as(true) %}
         tokenssl.triggerMxCheck({{site.site_domains | json_encode | raw}});
+        {% endif %}
+
         tokenssl.refreshOrder('{{site.id}}', 'issued'); 
     });
 </script>

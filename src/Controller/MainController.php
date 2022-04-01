@@ -267,11 +267,20 @@ class MainController
         $db = DatabaseUtils::initLocalDatabase();
         $order = $db->query("select * from certificate where site_id = ?", ($site['id']))->fetch();
         $has_ip = false;
+        $has_wildcard = false;
+
         if (isset($order->domains)) {
             $order->domains = json_decode($order->domains);
             foreach ($order->domains as $domain) {
                 if (filter_var($domain, FILTER_VALIDATE_IP)) {
                     $has_ip = true;
+                }
+
+                if (strpos($domain, '*') !== false) {
+                    $has_wildcard = true;
+                }
+
+                if ($has_ip && $has_wildcard) {
                     break;
                 }
             }
@@ -300,6 +309,7 @@ class MainController
             'dcv_data' => $dcvFormat,
             'bt_ip' => $bt_ip,
             'has_ip' => $has_ip,
+            'has_wildcard' => $has_wildcard,
         ]);
     }
 
