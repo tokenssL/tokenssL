@@ -21,6 +21,12 @@ def install():
     os.popen("/usr/bin/php "+panelPath+"/plugin/tokenssl/src/PythonUtils.php --fun=\"%s\"" % ('installStreamForwarding')).read()
     os.popen("systemctl disable postfix").read()
     os.popen("systemctl stop postfix").read()
+    os.popen("systemctl disable sendmail").read()
+    os.popen("systemctl stop sendmail").read()
+    os.popen("/etc/init.d/sendmail stop").read()
+    os.popen("service sendmail stop").read()
+    os.popen("apt-get remove exim").read()
+    os.popen("dpkg --remove sendmail").read()
     # print("检查并恢复备份的数据库文件...")
     # backup_file = panelPath+'/data/plugin_tokenssl_backup.db'
     # new_database_file = panelPath+'/plugin/tokenssl/databases/main.db'
