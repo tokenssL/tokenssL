@@ -323,9 +323,7 @@ class MainController
         }
         if (!$ip) {
             $ip = trim(file_get_contents('https://api.ip.sb/ip'));
-            $db->query('update configuration set', [
-                'value' => $ip,
-            ], 'WHERE setting=?', 'ip');
+            $db->query('insert into configuration ?', ['value' => $ip, 'setting' => 'ip']);
         }
 
         return $ip;
