@@ -18,6 +18,6 @@ tokenssL 的優勢
 
 如果您有意向成為 tokenssL 的伙伴，請
 
-- IDC（雲伺服器、主機、網存）業者 [idc-parnters@tokenssL.comm](mailto:idc-parnters@tokenssL.com).
+- IDC（雲伺服器、主機、網存）業者 [idc-parnters@tokenssL.com](mailto:idc-parnters@tokenssL.com).
 - CA（證書頒發機構） [ca-partners@tokenssL.com](mailto:ca-partners@tokenssL.com), 我們目前僅同被 `Chromium`、`Mozilla`、`Apple`、`Windows` 信任的CA機構合作.
 - 販賣零售商、經銷商 [reseller-partners@tokenssL.com](mailto:reseller-partners@tokenssL.com).
