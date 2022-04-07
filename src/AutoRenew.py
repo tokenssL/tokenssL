@@ -303,6 +303,7 @@ def get_expiring_orders():
         'where `status` like "issued" ' + \
         'and `valid_till` is not null ' + \
         'and `valid_till` <> "" ' + \
+        'and `renew_id` is null ' + \
         'and `valid_till` <= "' + time.strftime("%Y-%m-%d %H:%M:%S", check_time) + '"' + \
         'and `renew_till` > "' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())) + '"'
     c = db.execute(check_sql)

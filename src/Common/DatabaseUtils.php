@@ -35,20 +35,20 @@ class DatabaseUtils
     {
         $db = self::initLocalDatabase();
         // 存储配置信息表
-        $db->query('create table if not exists token
-(
+        $db->query('
+create table if not exists token (
 	token text not null constraint token_pk primary key,
     callback_url text not null
 );');
         // 存储配置信息表
-        $db->query('create table if not exists configuration
-(
+        $db->query('
+create table if not exists configuration (
 	setting text not null constraint configuration_pk primary key,
 	value text not null
 );');
         // 存储证书信息的表
-        $db->query('create table certificate
-(
+        $db->query('
+create table certificate (
 	id integer constraint certificate_pk primary key autoincrement,
 	site_id integer not null,
 	status text not null,
@@ -66,15 +66,14 @@ class DatabaseUtils
 	valid_till timestamp,
     renew_till timestamp,
 	vendor_id text,
+    renew_id integer default null,
     deploy_status integer default 0 not null,
 	created_at timestamp default current_timestamp not null
 );
 
-create unique index certificate_id_uindex
-	on certificate (id);
+create unique index certificate_id_uindex on certificate (id);
 
-create unique index certificate_site_id_uindex
-	on certificate (site_id);
+create unique index certificate_site_id_uindex on certificate (site_id);
 
 ');
         // 保存日志信息的表

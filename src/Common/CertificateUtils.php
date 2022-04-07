@@ -100,7 +100,7 @@ class CertificateUtils
         // 还需要检查域名的合法性, 并且找出可以申请证书的域名, 以及中文域名的转换
         $domains = json_decode($order['domains']);
         if (empty($domains)) {
-            throw new TokenSSLException("该站点没有域名, 无法续费L");
+            throw new TokenSSLException("该站点没有域名, 无法续费");
         }
         // 创建CSR和KEY
         $newCsrAndKey = self::generateKeyPair($domains[0], FALSE); // 创建CSR，默认申请RSA证书
@@ -131,22 +131,40 @@ class CertificateUtils
             throw new TokenSSLException(json_encode($orderRlt));
         }
 
-        // 更新订单信息和状态到数据库
-        $db->query("UPDATE certificate SET", [
-            'status' => $orderRltData['cert_status'],
-            'dcv_info' => json_encode($orderRltData['dcv_info']),
-            'csr_code' => $newCsrAndKey['csr_code'],
-            'key_code' => $newCsrAndKey['key_code'],
-            'vendor_id' => $orderRltData['tokenssl_id'],
-            'created_at' => $orderRltData['created_at'],
-        ], 'WHERE id = ?', $cert_order_id);
 
-        // 查询站点信息
-        $dbBaota = DatabaseUtils::initBaoTaSystemDatabase();
-        $site = $dbBaota->query('select * from sites where id=?', ($order['site_id']))->fetch();
-        $siteInfo = NginxVhostUtils::getVhostConfigInfo($site['name']);
-        // 写配置文件
-        NginxVhostUtils::writeValidationFile($siteInfo['vhost_info']['run_path'], $validationPath, $filename, $content);
+        try {
+            $db->beginTransaction();
+            // 写入订单信息和状态到数据库
+            $db->query("INSERT INTO certificate", [
+                [
+                    'site_id' => $siteInfo['id'],
+                    'status' => $orderRltData['cert_status'],
+                    'token' => $token,
+                    'period' => $orderRltData['period'],
+                    'type' => $orderRltData['type'],
+                    'domains' => json_encode($domains),
+                    'domain_count' => count($domains),
+                    'dcv_info' => json_encode($orderRltData['dcv_info']),
+                    'csr_code' => $newCsrAndKey['csr_code'],
+                    'key_code' => $newCsrAndKey['key_code'],
+                    'vendor_id' => $orderRltData['cert_id'],
+                    'created_at' => $orderRltData['created_at'],
+                    'renew_till' => $orderRltData['renew_till'],
+                ]
+            ]);
+
+            LogUtils::writeLog(LogUtils::STATUS_SUCCESS, LogUtils::TITLE_CERT_CREATED, "为站点 $siteId 成功创建续费证书订单 ");
+
+            // 更新订单信息和状态到数据库
+            $db->query("UPDATE certificate SET", [
+                'renew_id' => $db->getInsertId(),
+            ], 'WHERE id = ?', $cert_order_id);
+            $db->commit();
+        } catch (\Exception $e) {
+            $db->rollBack();
+            throw $e;
+        }
+
         return true;
     }
 
