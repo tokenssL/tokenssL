@@ -39,6 +39,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 * Returns an iterator over all items.
 	 * @return \RecursiveArrayIterator
 	 */
+	#[\ReturnTypeWillChange]
 	public function getIterator()
 	{
 		return new \RecursiveArrayIterator((array) $this);
@@ -49,6 +50,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 * Returns items count.
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange]
 	public function count()
 	{
 		return count((array) $this);
@@ -59,6 +61,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 * Replaces or appends a item.
 	 * @return void
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetSet($key, $value)
 	{
 		if (!is_scalar($key)) { // prevents null
@@ -72,6 +75,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 * Returns a item.
 	 * @return mixed
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($key)
 	{
 		return $this->$key;
@@ -82,6 +86,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 * Determines whether a item exists.
 	 * @return bool
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists($key)
 	{
 		return isset($this->$key);
@@ -92,6 +97,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 * Removes the element from this list.
 	 * @return void
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetUnset($key)
 	{
 		unset($this->$key);

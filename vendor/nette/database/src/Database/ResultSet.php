@@ -61,8 +61,10 @@ class ResultSet implements \Iterator, IRowContainer
 			if (substr($queryString, 0, 2) === '::') {
 				$connection->getPdo()->{substr($queryString, 2)}();
 			} elseif ($queryString !== null) {
-				static $types = ['boolean' => PDO::PARAM_BOOL, 'integer' => PDO::PARAM_INT,
-					'resource' => PDO::PARAM_LOB, 'NULL' => PDO::PARAM_NULL, ];
+				static $types = [
+					'boolean' => PDO::PARAM_BOOL, 'integer' => PDO::PARAM_INT,
+					'resource' => PDO::PARAM_LOB, 'NULL' => PDO::PARAM_NULL,
+				];
 				$this->pdoStatement = $connection->getPdo()->prepare($queryString);
 				foreach ($params as $key => $value) {
 					$type = gettype($value);
@@ -161,20 +163,16 @@ class ResultSet implements \Iterator, IRowContainer
 				// do nothing
 			} elseif ($type === IStructure::FIELD_INTEGER) {
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
-
 			} elseif ($type === IStructure::FIELD_FLOAT) {
 				if (($pos = strpos($value, '.')) !== false) {
 					$value = rtrim(rtrim($pos === 0 ? "0$value" : $value, '0'), '.');
 				}
 				$float = (float) $value;
 				$row[$key] = (string) $float === $value ? $float : $value;
-
 			} elseif ($type === IStructure::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
-
 			} elseif ($type === IStructure::FIELD_DATETIME || $type === IStructure::FIELD_DATE || $type === IStructure::FIELD_TIME) {
 				$row[$key] = new Nette\Utils\DateTime($value);
-
 			} elseif ($type === IStructure::FIELD_TIME_INTERVAL) {
 				preg_match('#^(-?)(\d+)\D(\d+)\D(\d+)(\.\d+)?\z#', $value, $m);
 				$row[$key] = new \DateInterval("PT$m[2]H$m[3]M$m[4]S");
@@ -182,7 +180,6 @@ class ResultSet implements \Iterator, IRowContainer
 					$row[$key]->f = isset($m[5]) ? (float) $m[5] : 0.0;
 				}
 				$row[$key]->invert = (int) (bool) $m[1];
-
 			} elseif ($type === IStructure::FIELD_UNIX_TIMESTAMP) {
 				$row[$key] = Nette\Utils\DateTime::from($value);
 			}
@@ -204,10 +201,7 @@ class ResultSet implements \Iterator, IRowContainer
 		Helpers::dumpResult($this);
 	}
 
-
-	/********************* interface Iterator ****************d*g**/
-
-
+	#[\ReturnTypeWillChange]
 	public function rewind()
 	{
 		if ($this->result === false) {
@@ -215,25 +209,25 @@ class ResultSet implements \Iterator, IRowContainer
 		}
 	}
 
-
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		return $this->result;
 	}
 
-
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		return $this->resultKey;
 	}
 
-
+	#[\ReturnTypeWillChange]
 	public function next()
 	{
 		$this->result = false;
 	}
 
-
+	#[\ReturnTypeWillChange]
 	public function valid()
 	{
 		if ($this->result) {
@@ -242,10 +236,6 @@ class ResultSet implements \Iterator, IRowContainer
 
 		return $this->fetch() !== false;
 	}
-
-
-	/********************* interface IRowContainer ****************d*g**/
-
 
 	/**
 	 * @inheritDoc
@@ -256,7 +246,6 @@ class ResultSet implements \Iterator, IRowContainer
 		if (!$data) {
 			$this->pdoStatement->closeCursor();
 			return false;
-
 		} elseif ($this->result === null && count($data) !== $this->pdoStatement->columnCount()) {
 			$duplicates = Helpers::findDuplicates($this->pdoStatement);
 			trigger_error("Found duplicate columns in database result set: $duplicates.", E_USER_NOTICE);

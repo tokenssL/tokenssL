@@ -9,7 +9,6 @@ namespace Nette\Utils;
 
 use Nette;
 
-
 /**
  * Provides the base class for a generic list (items can be accessed by index).
  */
@@ -19,26 +18,25 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 
 	private $list = [];
 
-
 	/**
 	 * Returns an iterator over all items.
 	 * @return \ArrayIterator
 	 */
+	#[\ReturnTypeWillChange]
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->list);
 	}
 
-
 	/**
 	 * Returns items count.
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange]
 	public function count()
 	{
 		return count($this->list);
 	}
-
 
 	/**
 	 * Replaces or appends a item.
@@ -47,6 +45,7 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 	 * @return void
 	 * @throws Nette\OutOfRangeException
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetSet($index, $value)
 	{
 		if ($index !== null && !is_int($index)) {
@@ -55,15 +54,12 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 		}
 		if ($index === null) {
 			$this->list[] = $value;
-
 		} elseif ($index < 0 || $index >= count($this->list)) {
 			throw new Nette\OutOfRangeException('Offset invalid or out of range');
-
 		} else {
 			$this->list[$index] = $value;
 		}
 	}
-
 
 	/**
 	 * Returns a item.
@@ -71,6 +67,7 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 	 * @return mixed
 	 * @throws Nette\OutOfRangeException
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($index)
 	{
 		if (!is_int($index)) {
@@ -83,17 +80,16 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $this->list[$index];
 	}
 
-
 	/**
 	 * Determines whether a item exists.
 	 * @param  int
 	 * @return bool
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists($index)
 	{
 		return $index >= 0 && $index < count($this->list);
 	}
-
 
 	/**
 	 * Removes the element at the specified position in this list.
@@ -101,6 +97,7 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 	 * @return void
 	 * @throws Nette\OutOfRangeException
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetUnset($index)
 	{
 		if (!is_int($index)) {
@@ -112,7 +109,6 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 		}
 		array_splice($this->list, $index, 1);
 	}
-
 
 	/**
 	 * Prepends a item.

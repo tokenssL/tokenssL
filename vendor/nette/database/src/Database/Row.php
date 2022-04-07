@@ -27,6 +27,7 @@ class Row extends Nette\Utils\ArrayHash implements IRow
 	 * @param  mixed  key or index
 	 * @return mixed
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($key)
 	{
 		if (is_int($key)) {
@@ -45,6 +46,7 @@ class Row extends Nette\Utils\ArrayHash implements IRow
 	 * @param  mixed  key or index
 	 * @return bool
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists($key)
 	{
 		if (is_int($key)) {

@@ -510,6 +510,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * @param  string  if it is not provided returns count of result rows, otherwise runs new sql counting query
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange]
 	public function count($column = null)
 	{
 		if (!$column) {
@@ -570,7 +571,6 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 		try {
 			$result = $this->query($this->getSql());
-
 		} catch (Nette\Database\DriverException $exception) {
 			if (!$this->sqlBuilder->getSelect() && $this->previousAccessedColumns) {
 				$this->previousAccessedColumns = false;
@@ -826,7 +826,6 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 		if ($data instanceof self) {
 			$return = $this->context->queryArgs($this->sqlBuilder->buildInsertQuery() . ' ' . $data->getSql(), $data->getSqlBuilder()->getParameters());
-
 		} else {
 			if ($data instanceof \Traversable) {
 				$data = iterator_to_array($data);
@@ -852,11 +851,11 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		if (!empty($primarySequenceName) && $primaryAutoincrementKey) {
 			$primaryKey[$primaryAutoincrementKey] = $this->context->getInsertId($this->context->getConnection()->getSupplementalDriver()->delimite($primarySequenceName));
 
-		// Autoincrement primary without sequence
+			// Autoincrement primary without sequence
 		} elseif ($primaryAutoincrementKey) {
 			$primaryKey[$primaryAutoincrementKey] = $this->context->getInsertId($primarySequenceName);
 
-		// Multi column primary without autoincrement
+			// Multi column primary without autoincrement
 		} elseif (is_array($this->primary)) {
 			foreach ($this->primary as $key) {
 				if (!isset($data[$key])) {
@@ -864,11 +863,11 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 				}
 			}
 
-		// Primary without autoincrement, try get primary from inserting data
+			// Primary without autoincrement, try get primary from inserting data
 		} elseif ($this->primary && isset($data[$this->primary])) {
 			$primaryKey = $data[$this->primary];
 
-		// If primaryKey cannot be prepared, return inserted rows count
+			// If primaryKey cannot be prepared, return inserted rows count
 		} else {
 			unset($this->refCache['referencing'][$this->getGeneralCacheKey()][$this->getSpecificCacheKey()]);
 			return $return->getRowCount();
@@ -903,7 +902,6 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	{
 		if ($data instanceof \Traversable) {
 			$data = iterator_to_array($data);
-
 		} elseif (!is_array($data)) {
 			throw new Nette\InvalidArgumentException;
 		}
@@ -1011,10 +1009,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		return $clone;
 	}
 
-
-	/********************* interface Iterator ****************d*g**/
-
-
+	#[\ReturnTypeWillChange]
 	public function rewind()
 	{
 		$this->execute();
@@ -1024,6 +1019,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 
 	/** @return ActiveRow|bool */
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		if (($key = current($this->keys)) !== false) {
@@ -1033,16 +1029,16 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		}
 	}
 
-
 	/**
 	 * @return string|int row ID
 	 */
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		return current($this->keys);
 	}
 
-
+	#[\ReturnTypeWillChange]
 	public function next()
 	{
 		do {
@@ -1050,14 +1046,12 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		} while (($key = current($this->keys)) !== false && !isset($this->data[$key]));
 	}
 
-
+	#[\ReturnTypeWillChange]
 	public function valid()
 	{
 		return current($this->keys) !== false;
 	}
 
-
-	/********************* interface ArrayAccess ****************d*g**/
 
 
 	/**
@@ -1066,6 +1060,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * @param  IRow
 	 * @return void
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetSet($key, $value)
 	{
 		$this->execute();
@@ -1078,6 +1073,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * @param  string row ID
 	 * @return ActiveRow|null if there is no such row
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($key)
 	{
 		$this->execute();
@@ -1090,6 +1086,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * @param  string row ID
 	 * @return bool
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists($key)
 	{
 		$this->execute();
@@ -1102,6 +1099,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * @param  string row ID
 	 * @return void
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetUnset($key)
 	{
 		$this->execute();

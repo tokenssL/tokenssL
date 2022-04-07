@@ -34,12 +34,10 @@ class CachingIterator extends \CachingIterator implements \Countable
 	{
 		if (is_array($iterator) || $iterator instanceof \stdClass) {
 			$iterator = new \ArrayIterator($iterator);
-
 		} elseif ($iterator instanceof \IteratorAggregate) {
 			do {
 				$iterator = $iterator->getIterator();
 			} while ($iterator instanceof \IteratorAggregate);
-
 		} elseif ($iterator instanceof \Traversable) {
 			if (!$iterator instanceof \Iterator) {
 				$iterator = new \IteratorIterator($iterator);
@@ -118,12 +116,12 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * Returns the count of elements.
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange]
 	public function count()
 	{
 		$inner = $this->getInnerIterator();
 		if ($inner instanceof \Countable) {
 			return $inner->count();
-
 		} else {
 			throw new Nette\NotSupportedException('Iterator is not countable.');
 		}
@@ -134,6 +132,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * Forwards to the next element.
 	 * @return void
 	 */
+	#[\ReturnTypeWillChange]
 	public function next()
 	{
 		parent::next();
@@ -147,6 +146,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * Rewinds the Iterator.
 	 * @return void
 	 */
+	#[\ReturnTypeWillChange]
 	public function rewind()
 	{
 		parent::rewind();
