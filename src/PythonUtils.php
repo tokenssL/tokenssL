@@ -1,9 +1,8 @@
 <?php
 
 namespace TokenSSL;
-//Boot Composer Loader
+
 use TokenSSL\Common\CertificateUtils;
-use TokenSSL\Common\NginxVhostUtils;
 use TokenSSL\Common\StreamForwardingUtils;
 use TokenSSL\Common\TokenssLService;
 use TokenSSL\Repository\SiteRep;

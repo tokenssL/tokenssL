@@ -1,4 +1,9 @@
-import sys,os,shutil
+import json
+from crontab import crontab
+import sys
+import os
+import shutil
+import public
 
 from shutil import copyfile
 
@@ -8,17 +13,19 @@ panelPath = UtiMod.init_panel_path()
 
 sys.path.append("class/")
 
-import public,json
-from crontab import crontab
 
 __plugin_name = 'tokenssl'
 __plugin_path = panelPath + '/plugin/' + __plugin_name
 
+
 def install():
     print("开始执行安装流程")
-    if not os.path.exists(__plugin_path): os.makedirs(__plugin_path)
-    copyfile(__plugin_path+"/icon.png", panelPath+"/BTPanel/static/img/soft_ico/ico-tokenssl.png")
-    os.popen("/usr/bin/php "+panelPath+"/plugin/tokenssl/src/PythonUtils.php --fun=\"%s\"" % ('installStreamForwarding')).read()
+    if not os.path.exists(__plugin_path):
+        os.makedirs(__plugin_path)
+    copyfile(__plugin_path+"/icon.png", panelPath +
+             "/BTPanel/static/img/soft_ico/ico-tokenssl.png")
+    os.popen("/usr/bin/php "+panelPath+"/plugin/tokenssl/src/PythonUtils.php --fun=\"%s\"" %
+             ('installStreamForwarding')).read()
     os.popen("nginx -t || cp /www/server/nginx/conf/nginx.conf.backup /www/server/nginx/conf/nginx.conf").read()
     os.popen("systemctl disable postfix").read()
     os.popen("systemctl stop postfix").read()
@@ -36,10 +43,16 @@ def install():
     #     copyfile(backup_file, new_database_file)
     #     os.remove(backup_file)
     # 增加Crone任务
+    echo = "a2018809d8268aa4885130e40cf1538a"
+    cronInfo = public.M('crontab').where('echo=?',(echo,)).field('id,echo').find()
+    if cronInfo and cronInfo['echo']:
+        print("Cron已存在，不重复安装!")
+        return
     PyEnv = get_python_env()
     print("PyEnv: ", get_python_env())
     gets = public.dict_obj()
-    gets.name = "TokenSSL™ 证书自动化"
+    gets.name = "tokenSSL™ 证书自动化"
+    gets.echo = echo
     gets.type = "minute-n"
     gets.where1 = "1"
     gets.hour = ""

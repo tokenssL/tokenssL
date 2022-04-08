@@ -32,15 +32,19 @@
             data: {},
             dataType: 'json',
             success: function (data) {
-                var ip = '{{ ip }}';
+                var ip = {{ ip | json_encode | raw}};
+                console.log(ip);
                 var ip2 = '{{ ip2 }}';
                 var has_change = false;
                 if (!data.limit_addr || 'string' != typeof data.limit_addr) {
                     data.limit_addr = '';
                 }
-                if (data.limit_addr.indexOf(ip) == -1) {
-                    data.limit_addr = data.limit_addr + '\n' + ip
-                    has_change = true;
+                for (var i = 0; i < ip.length; i++) {
+                    var ip_each = ip[i];
+                    if (data.limit_addr.indexOf(ip_each) == -1) {
+                        data.limit_addr = data.limit_addr + '\n' + ip_each
+                        has_change = true;
+                    }
                 }
                 if (data.limit_addr.indexOf(ip2) == -1) {
                     data.limit_addr = data.limit_addr + '\n' + ip2

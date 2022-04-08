@@ -93,7 +93,7 @@ def get_baota_database():
 
 def get_setup_path():
     db = get_baota_database().cursor()
-    c = db.execute('select `id` from crontab where `name` = "TokenSSL™ 证书自动化"')
+    c = db.execute('select `id` from crontab where `echo` = "a2018809d8268aa4885130e40cf1538a"')
     cron_id = c.fetchall()[0][0]
 
 
@@ -105,12 +105,12 @@ def uninstall():
     # print('已完成数据库备份')
     # 调用Baota API删除已创建的CronTab
     db = get_baota_database().cursor()
-    c = db.execute('select `id` from crontab where `name` = "TokenSSL™ 证书自动化"')
+    c = db.execute('select `id` from crontab where `echo` = "a2018809d8268aa4885130e40cf1538a"')
     cron_id = c.fetchall()[0][0]
     gets = public.dict_obj()
     gets.id = cron_id
     crontab().DelCrontab(gets)
-    print('已删除 TokenSSL 定时任务')
+    print('已删除 tokenSSL 定时任务')
 
 
 if __name__ == '__main__':

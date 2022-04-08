@@ -295,6 +295,7 @@ def remove_local_ssl_order(order_id):
 
 # 获取即将过期/需要续费的订单
 def get_expiring_orders():
+    print("正在检查即将过期的订单...")
     db = get_database().cursor()
     # 15天内过期就要开始尝试续费
     check_time = time.localtime(time.time() + 3600 * 24 * 15)
@@ -360,7 +361,7 @@ def main_process():
     # 检查证书签发并完成部署
     # process_cert_issued()
     # 检查即将过期的证书并尝试下单续费
-    # process_cert_renewal()
+    renewal_expiring_cert()
     # 删除68天之前的日志信息
     # delete_expired_logs()
     print('done')

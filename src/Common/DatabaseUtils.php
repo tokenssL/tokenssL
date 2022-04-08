@@ -23,7 +23,8 @@ class DatabaseUtils
      */
     public static function initBaoTaSystemDatabase()
     {
-        $dbPath = realpath(__DIR__ . '/../../../../data/default.db');
+        $dbPath = NginxVhostUtils::getBtPanelPath() . '/data/default.db';
+        $dbPath = realpath($dbPath);
         $database = new Connection("sqlite:$dbPath");
         return $database;
     }
@@ -99,14 +100,16 @@ create unique index logs_id_uindex
     public static function installCronJob()
     {
         $db = self::initBaoTaSystemDatabase();
-        $echo = "5eeb48072b7a0fc713483bd5ade1d59d";
-        $check = $db->query("select `id` from crontab where `name` = ?", ("tokenssL™ 证书自动化"))->fetch();
+        $name = "tokenssL™ 证书自动化";
+        $echo = md5($name);
+        $baseShell = NginxVhostUtils::getBtPanelPath() . "/../cron/" . $echo;
+        $check = $db->query("select `id` from crontab where `echo` = ?", $echo)->fetch();
         // Windows系统
-        if (is_dir(getenv("BT_PANEL")) && empty($check)) {
+        if (empty($check) && !file_exists($baseShell)) {
             $pyEnv = self::findValidPythonExecutedPath();
             $db->query("INSERT INTO `crontab` ?", [
                 'echo' => $echo,
-                'name' => "tokenssL™ 证书自动化",
+                'name' => $name,
                 'type' => "minute-n",
                 'where1' => "1",
                 'where_hour' => "",
@@ -125,7 +128,6 @@ create unique index logs_id_uindex
             if (!is_dir(NginxVhostUtils::getBtPanelPath() . "/../cron/")) {
                 mkdir(NginxVhostUtils::getBtPanelPath() . "/../cron/");
             }
-            $baseShell = NginxVhostUtils::getBtPanelPath() . "/../cron/" . $echo;
             file_put_contents($baseShell, str_replace("\r\n", "\n", $shellContent));
 
             self::reloadCrond();

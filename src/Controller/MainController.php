@@ -85,7 +85,8 @@ class MainController
             'ip2' => $this->getIp(),
         ];
         if ($data['initializeRequired']) {
-            $data['ip'] = trim(gethostbyname('smtp.forwarding.tokenssl.com'));
+            $dns_txt = dns_get_record('_hosts.smtp.forwarding.tokenssl.com', DNS_TXT);
+            $data['ip'] = isset($dns_txt[0]['txt']) ? explode(',', trim($dns_txt[0]['txt'])) : '';
         }
 
         return $this->twig->render('siteList.html.twig', $data);
