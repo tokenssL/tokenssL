@@ -1,9 +1,4 @@
-import json
-from crontab import crontab
-import sys
-import os
-import shutil
-import public
+import sys,os,shutil
 
 from shutil import copyfile
 
@@ -13,9 +8,12 @@ panelPath = UtiMod.init_panel_path()
 
 sys.path.append("class/")
 
+import public,json
+from crontab import crontab
 
 __plugin_name = 'tokenssl'
 __plugin_path = panelPath + '/plugin/' + __plugin_name
+
 
 
 def install():
