@@ -1,7 +1,7 @@
 <?php
 
 /**
- * https://github.com/tokenssL/tokenssL-baoTa
+ * https://github.com/tokenssL/tokenssL
  * 禁用错误报告, 防止出现接口响应体异常
  */
 error_reporting(0);
@@ -54,17 +54,6 @@ if (!empty($requirements)) {
 ?>
 
 <?php
-//宝塔Linux面板插件demo for PHP
-//@author 阿良<287962566@qq.com>
-
-//必需面向对象编程，类名必需为bt_main
-//允许面板访问的方法必需是public方法
-//通过_get函数获取get参数,通过_post函数获取post参数
-//可在public方法中直接return来返回数据到前端，也可以任意地方使用echo输出数据后exit();
-//可在./php_version.json中指定兼容的PHP版本，如：["56","71","72","73"]，没有./php_version.json文件时则默认兼容所有PHP版本，面板将选择 已安装的最新版本执行插件
-//允许使用模板，请在./templates目录中放入对应方法名的模板，如：test.html，请参考插件开发文档中的【使用模板】章节
-//支持直接响应静态文件，请在./static目录中放入静态文件，请参考插件开发文档中的【插件静态文件】章节
-
 
 class bt_main extends \TokenSSL\Controller\MainController
 {
