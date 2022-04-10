@@ -266,7 +266,7 @@ class MainController
         $site = SiteRep::getSiteById(_post('siteId'));
         // 获取 TokenSSL 证书订单
         $db = DatabaseUtils::initLocalDatabase();
-        $order = $db->query("select * from certificate where site_id = ?", ($site['id']))->fetch();
+        $order = $db->query("select * from certificate where site_id = ? order by id desc", ($site['id']))->fetch();
         $has_ip = false;
         $has_wildcard = false;
 
